@@ -7,7 +7,7 @@ include 'common.php';
 require_once("custom/php/common.php");
  
 //verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
-if (is_user_logged_in() && current_user_can('manage unit objects')) {        
+if (is_user_logged_in() && current_user_can('manage_unit_types')) {        
  
 $liga =liga_basedados();
 

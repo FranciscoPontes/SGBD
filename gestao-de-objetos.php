@@ -105,21 +105,28 @@ if ($_REQUEST["estado_execucao"] == "") {
         <h3><strong>Gestão de Objetos - <span>Introdução</span></strong></h3>
  
         <!--criação do formulário de inserção de objetos-->
-        <!-- onsubmit="return adicionar_objeto()" -->
         <form name="gestao_de_objetos"  method="post">
         <p>
             <label><b>Nome:</b></label>
             <input type="text" name="nome_do_objeto">
         </p>
         <p>
+        <!-- Francisco Pontes -->
             <label><b>Tipo:</b></label>
-            <div>
-                <label><b>Propriedade</b></label>
-                <input type="radio" name="tipo_de_objeto" value="propriedade">
- 
-                <label><b>Canal de venda</b></label>
-                <input type="radio" name="tipo_de_objeto" value="canal de venda">
-            </div>
+            <?php
+            // guarda na variavel a query
+            $query_seleciona_tipos="SELECT id, name FROM obj_type";
+            //executa a query e guarda o retorno na variavel
+            $resultado_seleciona_tipos=executa_query($query_seleciona_tipos);
+            //ciclo para percorrer todos os objetos e indicar os vários tipos de objeto
+            while ($array_seleciona_tipos = mysqli_fetch_array($resultado_seleciona_tipos)) {
+                $id=$array_seleciona_tipos["id"];
+                $nome=$array_seleciona_tipos["nome_do_objeto"];
+            }
+            ?>
+            <td>
+                <input class="radio" type="radio" name="tipo_de_objeto"  value="<?php echo $id; ?>"> <?php echo $nome_do_objeto; ?>
+            </td>
            
         </p>
         <p> <!--aqui-->
@@ -145,27 +152,28 @@ if ($_REQUEST["estado_execucao"] == "") {
         ?>
         <h3><b>Gestão de objetos - inserção</b></h3>
         <?php
+        //          Francisco Pontes
         //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
         $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);
         $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
         $object_estado = guarda_variavel($_REQUEST['estado']);
         if (empty($object_nome_do_objeto)) {
             ?>
-            <p>Não inseriu um nome para o objeto.<p>
+            <p>É necessário indicar um nome para o objeto.<p>
             <?php
             // faz verificação, para ver se o object_nome_do_objeto não está vazio
             back();                    
  
-            } elseif (is_null($object_tipo_de_objeto)) {
+            }elseif (empty($object_tipo_de_objeto)) {
             ?>
             <p>É necessário indicar o tipo de objeto.<p>
             <?php
              
             // faz verificação, para ver se o object_tipo_de_objeto não está vazio
             back();                    
-        } elseif (is_null($object_estado)) {
+            }elseif (empty($object_estado)) {
             ?>
-            <p>Tem que indicar o estado do objeto.<p>
+            <p>É necessário indicar o estado do objeto.<p>
             <?php
             // faz a verificação, para ver se o object_estado não está vazio
             back();    
@@ -174,7 +182,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         }
         
         else {
-            
+            //              Francisco Pontes
             //define a query para inserir valores
             $query_inserir = "INSERT INTO `object` (`tipo_de_objeto`, `id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar]','1')"; 
             //executa a query
