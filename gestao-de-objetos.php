@@ -1,5 +1,3 @@
-
- 
 <script>
     function adicionar_objeto() {
         var nome_do_objeto = document.forms["gestao_de_objetos"]["nome_do_objeto"].value;
