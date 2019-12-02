@@ -184,7 +184,7 @@ if ($_REQUEST["estado_execucao"] == "") {
             mysqli_query($liga,'COMMIT');
             ?>
             <p>Inserção de dados feita com sucesso!
-            Clique  <a href="gestao-de-objetos">aqui</a> para continuar.
+            Clique  em <a href="gestao-de-objetos">continuar</a> para avançar.
             <br/>
             <?php
             }
