@@ -38,56 +38,55 @@ if ($_REQUEST["estado_execucao"] == "") {
                 </thead>
                 <tbody>
                 <?php
-                //guarda na query o SQL dos objetos, já ordenados alfabeticamente
-                $query_object_obj_type = "SELECT id, name FROM obj_type ORDER by name";
+                
+                //guarda na variável a query que seleciona os ids da tabela obj_type,ordenados pelo nome
+                $query_tipos_objeto="SELECT id,name from obj_type ORDER BY name";
                 //utiliza a função executa_query que está no common.php e executa o SQL na base de dados
-                $result_object_obj_type = executa_query($query_object_obj_type);        
+                $result_tipos_objeto = executa_query($query_tipos_objeto);        
  
-                //cria um array com os valores da query $result_object_obj_type
-                while ($array_object_obj_type = mysqli_fetch_array($result_object_obj_type)) {
+                //cria um array com os valores da query $result_tipos_objeto
+                while ($array_tipos_objeto = mysqli_fetch_array($result_tipos_objeto)) {
  
                     //definicao da query a ser executada posteriormente
-                    $query_object_obj_type = "SELECT object.tipo_de_objeto, object.id, object.nome_do_objeto, object.estado, object.acao                          
-                                        FROM object
-                                        WHERE object.obj_type_id = " . $array_object_obj_type["id"] . " " .
-                                        "ORDER BY object.nome_do_objeto";            
+                    $query_objeto = "SELECT tipo_de_objeto,id, nome_do_objeto, estado, acao                          
+                                        FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " " .
+                                        "ORDER BY nome_do_objeto";         
                    
                     //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
-                    $result_object_obj_type = executa_query($query_object_obj_type);      
+                    $result_objeto = executa_query($query_objeto);      
                    
                     //utiliza a função do mysql para saber o número de linhas para cada obj_type
-                    $lines_object_obj_type = mysqli_num_rows($result_object_obj_type);                    
+                    $lines_objeto = mysqli_num_rows($result_objeto);                    
  
-                    if ($lines_object_obj_type > 0) {
+                    if ($lines_objeto > 0) {
                         ?>
  
                         <!--definição numero colunas e linhas-->
-                        <tr colspan="1" rowspan="<?php echo $lines_object_obj_type?>">
+                        <tr>
+                            <td colspan="1" rowspan="<?php echo $lines_objeto;?>">
+                                <?php
+                                echo $array_tipos_objeto["name"];
+                                ?>
+                            </td>
                         <?php
                        
-                        //criação de um array com os valores da query guardados na variável $result_object_obj_type
-                        while ($array_object_obj_type = mysqli_fetch_array($result_object_obj_type)) {              
+                        //criação de um array com os valores da query guardados na variável $result_objeto
+                        while ($array_objeto = mysqli_fetch_array($result_objeto)) {              
                             ?>
-                            <td >
-                            <?php
-                                //escreve os dados para cada posição do array
-                                echo $array_object_obj_type["tipo_de_objeto"];
+                            <td> <?php
+                                echo $array_objeto["id"];
                                 ?>
                             </td>
                             <td> <?php
-                                echo $array_object_obj_type["id"];
+                                echo $array_objeto["nome_do_objeto"];
                                 ?>
                             </td>
                             <td> <?php
-                                echo $array_object_obj_type["nome_do_objeto"];
+                                echo $array_objeto["estado"];
                                 ?>
                             </td>
                             <td> <?php
-                                echo $array_object_obj_type["estado"];
-                                ?>
-                            </td>
-                            <td> <?php
-                                echo $array_object_obj_type["acao"];
+                                echo $array_objeto["acao"];
                                 ?>
                             </td>
                         </tr>
@@ -114,26 +113,28 @@ if ($_REQUEST["estado_execucao"] == "") {
         <!-- Francisco Pontes -->
             <label><b>Tipo:</b></label>
             <?php
-            // guarda na variavel a query
-            $query_seleciona_tipos="SELECT id, name FROM obj_type";
+            // guarda na variavel a query, vai à tabela obj_type buscar os ids dos tipos de objeto
+            $query_seleciona_tipos="SELECT distinct name,id from obj_type";
             //executa a query e guarda o retorno na variavel
             $resultado_seleciona_tipos=executa_query($query_seleciona_tipos);
             //ciclo para percorrer todos os objetos e indicar os vários tipos de objeto
             while ($array_seleciona_tipos = mysqli_fetch_array($resultado_seleciona_tipos)) {
                 $id=$array_seleciona_tipos["id"];
-                $nome=$array_seleciona_tipos["nome_do_objeto"];
-            }
+                // name da tabela obj_type 
+                $tipo=$array_seleciona_tipos["name"];         
             ?>
-            <td>
-                <input class="radio" type="radio" name="tipo_de_objeto"  value="<?php echo $id; ?>"> <?php echo $nome_do_objeto; ?>
-            </td>
-           
+            <!-- <td> -->
+                <input type="radio" name="tipo_de_objeto"  value="<?php echo $id; ?>"> <?php echo $tipo; ?>
+            <!-- </td> -->
+           <?php
+           }
+           ?>
         </p>
         <p> <!--aqui-->
             <label><b>Estado:</b></label>
             <div>
                 <label><b>Ativo</b></label>
-                <input type="radio" name="estado" value="ativo"><!-- estado ativo-->
+                <input type="radio" name="estado" value="ativo"> <!-- estado ativo-->
  
                 <label><b>Inativo</b></label>
                 <input type="radio" name="estado" value="inativo">
@@ -155,8 +156,10 @@ if ($_REQUEST["estado_execucao"] == "") {
         //          Francisco Pontes
         //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
         $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);
-        $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
         $object_estado = guarda_variavel($_REQUEST['estado']);
+        //variavel para guardar o obj_type_id do objeto que corresponderá a um certo tipo 
+        $object_obj_type_id = guarda_variavel($_REQUEST['tipo_de_objeto']);
+        echo($object_obj_type_id);
         if (empty($object_nome_do_objeto)) {
             ?>
             <p>É necessário indicar um nome para o objeto.<p>
@@ -164,7 +167,7 @@ if ($_REQUEST["estado_execucao"] == "") {
             // faz verificação, para ver se o object_nome_do_objeto não está vazio
             back();                    
  
-            }elseif (empty($object_tipo_de_objeto)) {
+            }elseif (is_null($object_obj_type_id)) {
             ?>
             <p>É necessário indicar o tipo de objeto.<p>
             <?php
@@ -184,7 +187,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         else {
             //              Francisco Pontes
             //define a query para inserir valores
-            $query_inserir = "INSERT INTO `object` (`tipo_de_objeto`, `id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar]','1')"; 
+            $query_inserir = "INSERT INTO `object` (`id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES (NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar]','$object_obj_type_id')"; 
             //executa a query
             $result_insert = executa_query($query_inserir);
  
