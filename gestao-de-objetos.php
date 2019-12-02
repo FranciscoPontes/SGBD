@@ -176,7 +176,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         else {
             
             //define a query para inserir valores
-            $query_inserir = "INSERT INTO `object` (`tipo_de_objeto`, `id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado',`s`,`1`)"; 
+            $query_inserir = "INSERT INTO `object` (`tipo_de_objeto`, `id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar]','1')"; 
             //executa a query
             $result_insert = executa_query($query_inserir);
  
