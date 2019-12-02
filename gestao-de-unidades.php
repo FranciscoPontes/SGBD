@@ -16,7 +16,7 @@ $liga =liga_basedados();
 if ($_REQUEST["estado_execucao"] == "") {    
  
     //utiliza a query_object para por o código da query da SQL
-    $query_object = "SELECT * FROM  attr_unit_type ";
+    $query_object = "SELECT * FROM  attr_unit_type  ORDER BY unidade" ;
 
     //utiliza a função executa_query definida em common.php e executa o SQL na base de dados
     $result_object = executa_query($query_object);  
@@ -29,167 +29,86 @@ if ($_REQUEST["estado_execucao"] == "") {
         <table class="mytable">
             <thead>
                 <tr>
-                    <th>id</th>
-                    <th>unidade</th>
+                    <th>Id</th>
+                    <th>Unidade</th>
                 </tr>
+
             </thead>
             <tbody>
             <?php
-            //guarda na query o SQL dos objetos, já ordenados alfabeticamente
-                $query_object_obj_type = "SELECT id, name FROM obj_type ORDER by name";
-                //utiliza a função executa_query que está no common.php e executa o SQL na base de dados
-                $result_object_obj_type = executa_query($query_object_obj_type);        
- 
-                //cria um array com os valores da query $result_object_obj_type
-                while ($array_object_obj_type = mysqli_fetch_array($result_object_obj_type)) {
- 
-                    //definicao da query a ser executada posteriormente
-                    $query_object_obj_type = "SELECT object.tipo_de_objeto, object.id, object.nome_do_objeto, object.estado, object.acao                          
-                                        FROM object
-                                        WHERE object.obj_type_id = " . $array_object_obj_type["id"] . " " .
-                                        "ORDER BY object.nome_do_objeto";            
-                   
-                    //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
-                    $result_object_obj_type = executa_query($query_object_obj_type);      
-                   
-                    //utiliza a função do mysql para saber o número de linhas para cada obj_type
-                    $lines_object_obj_type = mysqli_num_rows($result_object_obj_type);                    
- 
-                    if ($lines_object_obj_type > 0) {
-                        ?>
- 
-                        <!--definição numero colunas e linhas-->
-                        <tr colspan="1" rowspan="<?php echo $lines_object_obj_type?>">
-                        <?php
-                       
-                        //criação de um array com os valores da query guardados na variável $result_object_obj_type
-                        while ($array_object_obj_type = mysqli_fetch_array($result_object_obj_type)) {              
-                            ?>
-                            <td >
-                            <?php
-                                //escreve os dados para cada posição do array
-                                echo $array_object_obj_type["tipo_de_objeto"];
-                                ?>
-                            </td>
-                            <td> <?php
-                                echo $array_object_obj_type["id"];
-                                ?>
-                            </td>
-                            <td> <?php
-                                echo $array_object_obj_type["nome_do_objeto"];
-                                ?>
-                            </td>
-                            <td> <?php
-                                echo $array_object_obj_type["estado"];
-                                ?>
-                            </td>
-                            <td> <?php
-                                echo $array_object_obj_type["acao"];
-                                ?>
-                            </td>
-                        </tr>
-                            <?php
-                        }
-                    }
+
+            //$query_valor = "SELECT id, unidade FROM attr_unit_type ORDER by unidade";
+            //$result_valor = executa_query($query_valor); 
+
+            //aqui query
+        ?>
+        <?php
+            while ($array_attr_unit_type = mysqli_fetch_array($result_object)) {
+                ?>
+                <tr> <!-- Imprime os valores -->
+                    <td> <?php echo $array_attr_unit_type['id']; ?></td>
+                    <td> <?php echo $array_attr_unit_type['unidade']; ?></td>
+                </tr>
+                <?php
                 }
                 ?>
-                </tbody>
             </table>
             <?php
-        }
-        //Gestão de objetos-Introdução
-        ?>
-        <h3><strong>Gestão de Unidades - <span>Introdução</span></strong></h3>
- 
-        <!--criação do formulário de inserção de objetos-->
-        <!-- onsubmit="return adicionar_objeto()" -->
-        <form name="gestao_de_objetos"  method="post">
-        <p>
-            <label><b>Nome:</b></label>
-            <input type="text" name="nome_do_objeto">
-        </p>
-        <p>
-            <label><b>Tipo:</b></label>
-            <div>
-                <label><b>Propriedade</b></label>
-                <input type="radio" name="tipo_de_objeto" value="propriedade">
- 
-                <label><b>Canal de venda</b></label>
-                <input type="radio" name="tipo_de_objeto" value="canal de venda">
-            </div>
-           
-        </p>
-        <p> <!--aqui-->
-            <label><b>Estado:</b></label>
-            <div>
-                <label><b>Ativo</b></label>
-                <input type="radio" name="estado" value="ativo"><!-- estado ativo-->
- 
-                <label><b>Inativo</b></label>
-                <input type="radio" name="estado" value="inativo">
-            </div>
-        </p>
-            <br>
-            <input type= "hidden" name= "estado_execucao" value= "inserir">
-            <input class= "button" type= "submit" value= "Inserir objeto">
-            <br><br>
-        </form>
-        <?php
-    }
- 
-    // Gestão de objetos-Inserção
-    elseif ($_REQUEST["estado_execucao"] == "inserir") {              
-        ?>
-        <h3><b>Gestão de objetos - inserção</b></h3>
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
-            $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);      
-            $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
-            $object_estado = guarda_variavel($_REQUEST['estado']);
-        }
-        if (empty($object_nome_do_objeto)) {
+            }
             ?>
-            <p>Não inseriu um nome para o objeto.<p>
-            <?php
-            // faz verificação, para ver se o object_nome_do_objeto não está vazio
-            back();                    
- 
-            } elseif (is_null($object_tipo_de_objeto)) {
-            ?>
-            <p>É necessário indicar o tipo de objeto.<p>
-            <?php
-            // faz verificação, para ver se o object_tipo_de_objeto não está vazio
-            back();                    
-        } elseif (is_null($object_estado)) {
-            ?>
-            <p>Tem que indicar o estado do objeto.<p>
-            <?php
-            // faz a verificação, para ver se o object_estado não está vazio
-            back();                  
-        } else {
+            <!-- Form para a introduçao de novos valores na Base de Dados -->
+            <h3>Gestão de unidades - Introdução</h3>
 
-            //define a query para inserir valores
-            $query_inserir = "INSERT INTO 'object' ('tipo_de_objeto', 'id', 'nome_do_objeto', 'estado', 'acao', 'obj_type_id') VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar],'1')"; 
-            //executa a query
-            $result_insert = mysqli_query($liga,$query_inserir);
- 
-                if ($result_insert) {
-                mysqli_query($liga,'COMMIT');
-                ?>
-                <p>Inserção de dados feita com sucesso!
-                Clique  <a href="gestao-de-objetos">aqui</a> para continuar.
-                <br/>
+            <form class="form-inline" method="POST" name="gest_unidades">
+                <label for="nome">Nome:</label>
+                <input type="text" name="unidade" placeholder="Insira a unidade">
+
+                <input type="hidden" name="estado_execucao" value="inserir">
+                <!-- botão de submissão-->
+                <button type="submit" name="insere_unidade">Submit</button>
+            </form>
+        <?php
+        } else {
+            //Inserção: Insert na base de dados do valor introduzido
+            if($_REQUEST["estado_execucao"] == "inserir") {
+        ?>
+                <h3>Gestão de unidades - Inserção</h3>
                 <?php
+                    //passa pela função de verifcação de segurança -- que recebe do Input
+                    $unidade= executa_query($_REQUEST['unidade']);
+
+                    //se estiver vazio não deixa avançar, retorna um aviso ao utilizador
+                    if (empty($unidade)) {
+                        ?>
+                        <p>Insira o nome de uma unidade</p>
+                        <?php
+                        back();
+                    } else {
+                        //o id está no modo AUTO_INCREMENT, não é necessário
+                        $query_insert_unit_type = "INSERT INTO `attr_unit_type` (name) VALUES ('$unidade')";
+
+                        //corre a query (mysqli_query(connection,query,resultmode);)
+                        //$result_insert_unit_type = mysqli_query($link, $query_insert_unit_type); //erro?
+                        $result_insert_unit_type = executa_query($query_insert_unit_type);
+
+                        ?>
+                        <p>Inseriu os dados de novo tipo de unidade com sucesso.</p>
+                        <p>
+                            Clique em <a href="gestao-de-unidades"><strong>Continuar</strong></a> para avançar
+                        </p>
+                        <?php
+                    }
             }
         }
-    }
-} else {
+    } else {
     ?>
-    Não tem autorização para aceder a esta página.
+        Não tem autorização para aceder a esta página
     <?php
-}
+    }
 ?>
+
+                   
+        
 
 
 
