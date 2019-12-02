@@ -22,7 +22,7 @@
         return $result;
     }
     
-    function guarda_variavel(){
+    function guarda_variavel($verifica){
         $link = liga_basedados();
         $retorno = mysqli_real_escape_string($link,$verifica);
         return $retorno;

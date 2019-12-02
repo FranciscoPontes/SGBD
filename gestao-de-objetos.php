@@ -1,26 +1,4 @@
-<script>
-    function adicionar_objeto() {
-        var nome_do_objeto = document.forms["gestao_de_objetos"]["nome_do_objeto"].value;
-        var tipo_de_objeto = document.forms["gestao_de_objetos"]["tipo_de_objeto"].checked;
-        var estado =document.forms["gestao_de_objetos"]["estado"].checked;
 
-        if(nome_do_objeto == ""){
-            alert("Tem atribuir um nome ao objeto");
-            return false;
-        }
-        else if(tipo_de_objeto == false)
-        {
-            alert("Tem de escolher um tipo de objeto");
-            return false;
-        }
-        else if(estado== false)
-        {
-            alert("Tem de escolher um estado para o objeto");
-            return false;
-        }
-        //return true;
-    }
-</script> -->
 <link rel="stylesheet" type="text/css" href="/custom/css/ag.css">
 
 
@@ -167,12 +145,10 @@ if ($_REQUEST["estado_execucao"] == "") {
         ?>
         <h3><b>Gestão de objetos - inserção</b></h3>
         <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST"){
-            //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
-            $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);      
-            $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
-            $object_estado = guarda_variavel($_REQUEST['estado']);
-        }
+        //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
+        $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);
+        $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
+        $object_estado = guarda_variavel($_REQUEST['estado']);
         if (empty($object_nome_do_objeto)) {
             ?>
             <p>Não inseriu um nome para o objeto.<p>
@@ -184,6 +160,7 @@ if ($_REQUEST["estado_execucao"] == "") {
             ?>
             <p>É necessário indicar o tipo de objeto.<p>
             <?php
+             
             // faz verificação, para ver se o object_tipo_de_objeto não está vazio
             back();                    
         } elseif (is_null($object_estado)) {
@@ -191,21 +168,25 @@ if ($_REQUEST["estado_execucao"] == "") {
             <p>Tem que indicar o estado do objeto.<p>
             <?php
             // faz a verificação, para ver se o object_estado não está vazio
-            back();                  
-        } else {
-
+            back();    
+              
+                      
+        }
+        
+        else {
+            
             //define a query para inserir valores
-            $query_inserir = "INSERT INTO 'object' ('tipo_de_objeto', 'id', 'nome_do_objeto', 'estado', 'acao', 'obj_type_id') VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado','[editar][desativar],'1')"; 
+            $query_inserir = "INSERT INTO `object` (`tipo_de_objeto`, `id`, `nome_do_objeto`, `estado`, `acao`, `obj_type_id`) VALUES ('$object_tipo_de_objeto',NULL,'$object_nome_do_objeto','$object_estado',`s`,`1`)"; 
             //executa a query
-            $result_insert = mysqli_query($liga,$query_inserir);
+            $result_insert = executa_query($query_inserir);
  
-                if ($result_insert) {
-                mysqli_query($liga,'COMMIT');
-                ?>
-                <p>Inserção de dados feita com sucesso!
-                Clique  <a href="gestao-de-objetos">aqui</a> para continuar.
-                <br/>
-                <?php
+            if ($result_insert) {
+            mysqli_query($liga,'COMMIT');
+            ?>
+            <p>Inserção de dados feita com sucesso!
+            Clique  <a href="gestao-de-objetos">aqui</a> para continuar.
+            <br/>
+            <?php
             }
         }
     }
