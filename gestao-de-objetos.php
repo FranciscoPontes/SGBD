@@ -18,9 +18,9 @@
             alert("Tem de escolher um estado para o objeto");
             return false;
         }
-        return true;
+        //return true;
     }
-</script>
+</script> -->
 <link rel="stylesheet" type="text/css" href="/custom/css/ag.css">
 
 
@@ -127,7 +127,8 @@ if ($_REQUEST["estado_execucao"] == "") {
         <h3><strong>Gestão de Objetos - <span>Introdução</span></strong></h3>
  
         <!--criação do formulário de inserção de objetos-->
-        <form name="gestao_de_objetos" onsubmit="return adicionar_objeto()" method="post">
+        <!-- onsubmit="return adicionar_objeto()" -->
+        <form name="gestao_de_objetos"  method="post">
         <p>
             <label><b>Nome:</b></label>
             <input type="text" name="nome_do_objeto">
@@ -166,11 +167,12 @@ if ($_REQUEST["estado_execucao"] == "") {
         ?>
         <h3><b>Gestão de objetos - inserção</b></h3>
         <?php
-        //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
-        $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);      
-        $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
-        $object_estado = guarda_variavel($_REQUEST['estado']);
-        
+        if ($_SERVER["REQUEST_METHOD"] == "POST"){
+            //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
+            $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);      
+            $object_tipo_de_objeto = guarda_variavel($_REQUEST['tipo_de_objeto']);
+            $object_estado = guarda_variavel($_REQUEST['estado']);
+        }
         if (empty($object_nome_do_objeto)) {
             ?>
             <p>Não inseriu um nome para o objeto.<p>
