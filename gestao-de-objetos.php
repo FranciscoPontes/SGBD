@@ -48,8 +48,9 @@ if ($_REQUEST["estado_execucao"] == "") {
                 while ($array_tipos_objeto = mysqli_fetch_array($result_tipos_objeto)) {
  
                     //definicao da query a ser executada posteriormente
-                    $query_objeto = "SELECT tipo_de_objeto,id, nome_do_objeto, estado, acao                          
-                                        FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " " .
+                    // concatenacao de string no where
+                    $query_objeto = "SELECT id, nome_do_objeto, estado, acao                          
+                                        FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " ".
                                         "ORDER BY nome_do_objeto";         
                    
                     //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
@@ -159,7 +160,6 @@ if ($_REQUEST["estado_execucao"] == "") {
         $object_estado = guarda_variavel($_REQUEST['estado']);
         //variavel para guardar o obj_type_id do objeto que corresponderá a um certo tipo 
         $object_obj_type_id = guarda_variavel($_REQUEST['tipo_de_objeto']);
-        echo($object_obj_type_id);
         if (empty($object_nome_do_objeto)) {
             ?>
             <p>É necessário indicar um nome para o objeto.<p>
