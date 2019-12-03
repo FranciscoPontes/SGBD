@@ -54,9 +54,9 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                     while ($array_attribute_nome = mysqli_fetch_array($resultado_attribute)) {
     
                         //definicao da query a ser executada posteriormente
-                        $query_attributes = "SELECT object.nome_do_objeto, attribute.id, attribute.nome_do_atributo, attribute.tipo_de_valor, attribute.nome_campo_formulario, attribute.tipo_campo_formulario, attribute.ordem_campo_formulario, attribute.tamanho_campo_formulario, attribute.obrigatorio, attribute.estado, attribute.acao
-                        FROM `attribute`, `object`
-                        WHERE attribute.objeto_id = object.id
+                        $query_attributes = "SELECT object.nome_do_objeto, attribute.id, attribute.nome_do_atributo, attribute.tipo_de_valor, attribute.nome_campo_formulario, attribute.tipo_campo_formulario, attr_unit_type.unidade, attribute.ordem_campo_formulario, attribute.tamanho_campo_formulario, attribute.obrigatorio, attribute.estado, attribute.acao
+                        FROM `attribute`, `object`, `attr_unit_type`
+                        WHERE attribute.objeto_id = object.id AND attr_unit_type.id = attribute.tipo_unidade_id
                         ORDER BY object.nome_do_objeto";            
                     
                         //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
@@ -76,6 +76,8 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                             while ($array_attributes = mysqli_fetch_array($result_attributes)) {              
                                 ?>
                                  <td><?php
+                                        echo $array_attributes['nome_do_objeto']; ?></td>
+                                 <td><?php
                                         echo $array_attributes['id']; ?></td>
                                     <td><?php
                                         echo $array_attributes['nome_do_atributo']; ?></td>
@@ -85,6 +87,18 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                                         echo $array_attributes['nome_campo_formulario']; ?></td>
                                     <td><?php
                                         echo $array_attributes['tipo_campo_formulario']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['unidade']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['ordem_campo_formulario']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['tamanho_campo_formulario']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['obrigatorio']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['estado']; ?></td>
+                                    <td><?php
+                                        echo $array_attributes['acao']; ?></td>
                             </tr>
                                 <?php
                             }
