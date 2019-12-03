@@ -12,10 +12,10 @@ $liga =liga_basedados();
 // Se o estado de execução não estiver definido
 if ($_REQUEST["estado_execucao"] == "") {    
  
-    //  utiliza a $query_object para colocar o código na query SQL
+    //  utiliza a $query_object para colocar o código na query SQL, guarda na variável
     $query_object = "SELECT * FROM  attr_unit_type  ORDER BY unidade" ;
 
-    // usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object
+    // usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object, executa a query e guarda na variável
     $result_object = executa_query($query_object);  
 
     // faz verificação para ver se existem objetos, caso não haja dá "Não  há tipos de unidades"
@@ -69,7 +69,7 @@ if ($_REQUEST["estado_execucao"] == "") {
             // Inserções - Coloca da base de dados o valor da unidade que o utilizador introduziu 
             if($_REQUEST["estado_execucao"] == "inserir") {
         ?>
-                <h3>Gestão de unidades - Inserção</h3>
+                <h3>Gestão de unidades - inserção</h3>
                 <?php
                     //  Pedido do valor unidade, que depois é passado a função guarda_variavel e coloca em $unidade
                     $unidade= guarda_variavel($_REQUEST['unidade']);
