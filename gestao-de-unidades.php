@@ -59,8 +59,8 @@ if ($_REQUEST["estado_execucao"] == "") {
             <!-- Form para a introduçao de novos valores na Base de Dados -->
             <h3>Gestão de unidades - Introdução</h3>
 
-            <form class="form-inline" method="POST" name="gest_unidades">
-                <label for="nome">Nome:</label>
+            <form class="form-inline" method="POST" name="gestao_unidades">
+                <label for="unidade">Nome:</label>
                 <input type="text" name="unidade" placeholder="Insira a unidade">
 
                 <input type="hidden" name="estado_execucao" value="inserir">
@@ -75,7 +75,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                 <h3>Gestão de unidades - Inserção</h3>
                 <?php
                     //passa pela função de verifcação de segurança -- que recebe do Input
-                    $unidade= executa_query($_REQUEST['unidade']);
+                    $unidade= guarda_variavel($_REQUEST['unidade']);//executa_query
 
                     //se estiver vazio não deixa avançar, retorna um aviso ao utilizador
                     if (empty($unidade)) {
@@ -85,7 +85,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                         back();
                     } else {
                         //o id está no modo AUTO_INCREMENT, não é necessário
-                        $query_insert_unit_type = "INSERT INTO `attr_unit_type` (name) VALUES ('$unidade')";
+                        $query_insert_unit_type = "INSERT INTO `attr_unit_type` (`unidade`) VALUES ('$unidade')";
 
                         //corre a query (mysqli_query(connection,query,resultmode);)
                         //$result_insert_unit_type = mysqli_query($link, $query_insert_unit_type); //erro?
