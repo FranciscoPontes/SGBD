@@ -1,51 +1,46 @@
-<?php echo "<h1>HELLO WORLD</h1>"; ?>
-
 
 <?php
 include 'common.php';
  
 require_once("custom/php/common.php");
  
-//verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
+// faz verificação, para ver se o utilizador está logado e se ter permissão para alterar objetos
 if (is_user_logged_in() && current_user_can('manage_unit_types')) {        
  
 $liga =liga_basedados();
 
-
-// Quando o estado da execução não está definido
+// Se o estado de execução não estiver definido
 if ($_REQUEST["estado_execucao"] == "") {    
  
-    //utiliza a query_object para por o código da query da SQL
+    //  utiliza a $query_object para colocar o código na query SQL
     $query_object = "SELECT * FROM  attr_unit_type  ORDER BY unidade" ;
 
-    //utiliza a função executa_query definida em common.php e executa o SQL na base de dados
+    // usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object
     $result_object = executa_query($query_object);  
 
-    //verifica se há objetos e se não houver dá mensagem de erro
+    // faz verificação para ver se existem objetos, caso não haja dá "Não  há tipos de unidades"
     if (mysqli_num_rows($result_object) == 0) {    
         echo "Não há tipos de unidades";        
     } else {
         ?>
-        <table class="mytable">
+                <!--criação da tabela-->
+        <table class="mytable"> 
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Unidade</th>
+                <!-- parametros da tabela-->
+                    <th>Id</th> 
+                    <th>Unidade</th>  
                 </tr>
 
             </thead>
             <tbody>
             <?php
-
-            //$query_valor = "SELECT id, unidade FROM attr_unit_type ORDER by unidade";
-            //$result_valor = executa_query($query_valor); 
-
-            //aqui query
+   
         ?>
         <?php
-            while ($array_attr_unit_type = mysqli_fetch_array($result_object)) {
+            while ($array_attr_unit_type = mysqli_fetch_array($result_object)) { 
                 ?>
-                <tr> <!-- Imprime os valores -->
+                <tr> <!-- Faz impressão dos valores -->
                     <td> <?php echo $array_attr_unit_type['id']; ?></td>
                     <td> <?php echo $array_attr_unit_type['unidade']; ?></td>
                 </tr>
@@ -56,7 +51,8 @@ if ($_REQUEST["estado_execucao"] == "") {
             <?php
             }
             ?>
-            <!-- Form para a introduçao de novos valores na Base de Dados -->
+
+                        <!--Introdução de valores-->
             <h3>Gestão de unidades - Introdução</h3>
 
             <form class="form-inline" method="POST" name="gestao_unidades">
@@ -64,31 +60,31 @@ if ($_REQUEST["estado_execucao"] == "") {
                 <input type="text" name="unidade" placeholder="Insira a unidade">
 
                 <input type="hidden" name="estado_execucao" value="inserir">
-                <!-- botão de submissão-->
+                        <!--Botão Submit-->
                 <button type="submit" name="insere_unidade">Submit</button>
             </form>
         <?php
         } else {
-            //Inserção: Insert na base de dados do valor introduzido
+           
+            // Inserções - Coloca da base de dados o valor da unidade que o utilizador introduziu 
             if($_REQUEST["estado_execucao"] == "inserir") {
         ?>
                 <h3>Gestão de unidades - Inserção</h3>
                 <?php
-                    //passa pela função de verifcação de segurança -- que recebe do Input
-                    $unidade= guarda_variavel($_REQUEST['unidade']);//executa_query
+                    //  Pedido do valor unidade, que depois é passado a função guarda_variavel e coloca em $unidade
+                    $unidade= guarda_variavel($_REQUEST['unidade']);
 
-                    //se estiver vazio não deixa avançar, retorna um aviso ao utilizador
+                    // Caso o valor em $unidade seja vazio, não avança e dá a mensagem Insira o nome de uma unidade
                     if (empty($unidade)) {
                         ?>
                         <p>Insira o nome de uma unidade</p>
                         <?php
-                        back();
+                        back(); // Faz voltar atrás
                     } else {
-                        //o id está no modo AUTO_INCREMENT, não é necessário
+                        // Insere na tabela attr_unit_type na coluna unidade os valores da unidade que são passados pelo utilizador.p.s-não precisa passar o id pois este está AI
                         $query_insert_unit_type = "INSERT INTO `attr_unit_type` (`unidade`) VALUES ('$unidade')";
 
-                        //corre a query (mysqli_query(connection,query,resultmode);)
-                        //$result_insert_unit_type = mysqli_query($link, $query_insert_unit_type); //erro?
+                        // Passa o valor de $query_insert_unit_type(valores passados pelo insert) para a função executa_query e atribui ao $result_insert_unit_type
                         $result_insert_unit_type = executa_query($query_insert_unit_type);
 
                         ?>
@@ -106,10 +102,3 @@ if ($_REQUEST["estado_execucao"] == "") {
     <?php
     }
 ?>
-
-                   
-        
-
-
-
-
