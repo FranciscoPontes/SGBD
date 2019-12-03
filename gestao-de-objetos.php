@@ -48,8 +48,9 @@ if ($_REQUEST["estado_execucao"] == "") {
                 while ($array_tipos_objeto = mysqli_fetch_array($result_tipos_objeto)) {
  
                     //definicao da query a ser executada posteriormente
+                    // concatenacao de string no where
                     $query_objeto = "SELECT id, nome_do_objeto, estado, acao                          
-                                        FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " " .
+                                        FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " ".
                                         "ORDER BY nome_do_objeto";         
                    
                     //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
