@@ -43,7 +43,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                 $query_tipos_objeto="SELECT id,name from obj_type ORDER BY name";
                 //utiliza a função executa_query que está no common.php e executa o SQL na base de dados
                 $result_tipos_objeto = executa_query($query_tipos_objeto);        
- 
+                
+                //       Francisco Pontes
                 //cria um array com os valores da query $result_tipos_objeto
                 while ($array_tipos_objeto = mysqli_fetch_array($result_tipos_objeto)) {
  
