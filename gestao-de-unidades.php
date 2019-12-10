@@ -1,7 +1,5 @@
 
-<?php
-include 'common.php';
- 
+<?php 
 require_once("custom/php/common.php");
  
 // faz verificação, para ver se o utilizador está logado e se ter permissão para alterar objetos
@@ -13,7 +11,7 @@ $liga =liga_basedados();
 if ($_REQUEST["estado_execucao"] == "") {    
  
     //  utiliza a $query_object para colocar o código na query SQL, guarda na variável
-    $query_object = "SELECT * FROM  attr_unit_type  ORDER BY unidade" ;
+    $query_object = "SELECT * FROM  attr_unit_type  ORDER BY name" ;
 
     // usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object, executa a query e guarda na variável
     $result_object = executa_query($query_object);  
@@ -29,7 +27,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                 <tr>
                 <!-- parametros da tabela-->
                     <th>Id</th> 
-                    <th>Unidade</th>  
+                    <th>Name</th>  
                 </tr>
 
             </thead>
@@ -38,11 +36,11 @@ if ($_REQUEST["estado_execucao"] == "") {
    
         ?>
         <?php
-            while ($array_attr_unit_type = mysqli_fetch_array($result_object)) { 
+            while ($array_attr_unit_type = mysqli_fetch_assoc($result_object)) { 
                 ?>
                 <tr> <!-- Faz impressão dos valores -->
                     <td> <?php echo $array_attr_unit_type['id']; ?></td>
-                    <td> <?php echo $array_attr_unit_type['unidade']; ?></td>
+                    <td> <?php echo $array_attr_unit_type['name']; ?></td>
                 </tr>
                 <?php
                 }
@@ -56,10 +54,10 @@ if ($_REQUEST["estado_execucao"] == "") {
             <h3>Gestão de unidades - Introdução</h3>
 
             <form class="form-inline" method="POST" name="gestao_unidades">
-                <label for="unidade">Nome:</label>
-                <input type="text" name="unidade" placeholder="Insira a unidade">
+                <label for="name">Nome:</label>
+                <input type="text" name="name" placeholder="Insira a unidade">
 
-                <input type="hidden" name="estado_execucao" value="inserir">
+                <input type="hidden" name="estado_execucao" value="inserir"> <!--altera o estado de execução no if abaixo-->
                         <!--Botão Submit-->
                 <button type="submit" name="insere_unidade">Submit</button>
             </form>
@@ -72,7 +70,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                 <h3>Gestão de unidades - inserção</h3>
                 <?php
                     //  Pedido do valor unidade, que depois é passado a função guarda_variavel e coloca em $unidade
-                    $unidade= guarda_variavel($_REQUEST['unidade']);
+                    $unidade= guarda_variavel($_REQUEST['name']);
 
                     // Caso o valor em $unidade seja vazio, não avança e dá a mensagem Insira o nome de uma unidade
                     if (empty($unidade)) {
@@ -82,7 +80,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                         back(); // Faz voltar atrás
                     } else {
                         // Insere na tabela attr_unit_type na coluna unidade os valores da unidade que são passados pelo utilizador.p.s-não precisa passar o id pois este está AI
-                        $query_insert_unit_type = "INSERT INTO `attr_unit_type` (`unidade`) VALUES ('$unidade')";
+                        $query_insert_unit_type = "INSERT INTO `attr_unit_type` (`name`) VALUES ('$unidade')";
 
                         // Passa o valor de $query_insert_unit_type(valores passados pelo insert) para a função executa_query e atribui ao $result_insert_unit_type
                         $result_insert_unit_type = executa_query($query_insert_unit_type);
