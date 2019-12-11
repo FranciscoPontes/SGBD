@@ -35,7 +35,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                     WHERE attribute.objeto_id=object.id AND attribute.tipo_de_valor='enum'";
 
             $result_objeto_e_atributo=executa_query($query_objeto_e_atributo);
-
+            
+            // ciclo que percorre o array associativo
             while($array_objeto_e_atributo=mysqli_fetch_array($result_objeto_e_atributo)){
                 
                 $query_valores_permitidos="SELECT *
@@ -48,6 +49,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                 if ($numero_valores_permitidos>0){
                     ?>
                     <tr>
+                        <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                        e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
                         <td colspan="1" rowspan="<?php echo $numero_valores_permitidos;?>">
                             <?php echo $array_objeto_e_atributo["name"]; ?>
                         </td>
@@ -59,6 +62,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                         </td>
                     <?php
                     $variavel=1;
+
+                    // ciclo que percorre o array associativo
                     while ($array_valores_permitidos=mysqli_fetch_array($result_valores_permitidos)){
                         if ($variavel==1){
                             ?>
@@ -109,6 +114,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                 else{
                     ?>
                     <tr>
+                        <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                        e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
                         <td colspan="1" rowspan="1">
                             <?php echo $array_objeto_e_atributo["name"]; ?>
                         </td>

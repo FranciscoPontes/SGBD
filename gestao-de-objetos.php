@@ -3,21 +3,21 @@
 
 require_once("custom/php/common.php");
  
-//verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
+// verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
 if (is_user_logged_in() && current_user_can('manage_objects')) {        
  
 $liga =liga_basedados();
  
-// Quando o estado da execução não está definido
+// quando o estado da execução não está definido
 if ($_REQUEST["estado_execucao"] == "") {    
  
-        //utiliza a query_object para por o código da query da SQL
+        // código SQL em formato string para obter os tuplos da tabela object
         $query_object = "SELECT * FROM object  ";
  
-        //utiliza a função executa_query definida em common.php e executa o SQL na base de dados
+        // utiliza a função executa_query definida em common.php e executa o SQL na base de dados
         $result_object = executa_query($query_object);  
  
-        //verifica se há objetos e se não houver dá mensagem de erro
+        // verifica se há objetos e se não houver dá mensagem de erro
         if (mysqli_num_rows($result_object) == 0) {    
             echo "Não há objetos ";        
         } else {
@@ -32,22 +32,20 @@ if ($_REQUEST["estado_execucao"] == "") {
                 </tr>
             <?php
             
-            //guarda na variável a query que seleciona os ids da tabela obj_type,ordenados pelo nome
+            // código SQL em formato string para obter id e nome da tabela obj_type, ordenados pelo nome
             $query_tipos_objeto="SELECT id,name from obj_type ORDER BY name";
-            //utiliza a função executa_query que está no common.php e executa o SQL na base de dados
+
             $result_tipos_objeto = executa_query($query_tipos_objeto);        
             
-            //       Francisco Pontes
-            //cria um array com os valores da query $result_tipos_objeto
+            // ciclo que percorre o array associativo
             while ($array_tipos_objeto = mysqli_fetch_array($result_tipos_objeto)) {
 
-                //definicao da query a ser executada posteriormente
-                // concatenacao de string no where
+
+                // código SQL em formato string para obter id,nome e estado da tabela objeto 
                 $query_objeto = "SELECT id, name,state                         
                                     FROM object WHERE obj_type_id=" . $array_tipos_objeto["id"] . " ".
                                     "ORDER BY name";         
                 
-                //utiliza a função executa_query existente no ficheiro common.php e executa a query na base de dados
                 $result_objeto = executa_query($query_objeto);      
                 
                 //utiliza a função do mysql para saber o número de linhas para cada obj_type
@@ -56,7 +54,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                 if ($lines_objeto > 0) {
                     ?>
                     
-                    <!--definição numero colunas e linhas-->
+                    <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                        e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
                     <tr>
                         <td colspan="1" rowspan="<?php echo $lines_objeto;?>">
                             <?php
@@ -132,17 +131,17 @@ if ($_REQUEST["estado_execucao"] == "") {
             <input type="text" name="nome_do_objeto">
         </p>
         <p>
-        <!-- Francisco Pontes -->
             <label><b>Tipo:</b></label>
             <?php
-            // guarda na variavel a query, vai à tabela obj_type buscar os ids dos tipos de objeto
+            // código SQL em formato string para obter tuplos de nome diferente e o seu id, da tabela obj_type
             $query_seleciona_tipos="SELECT distinct name,id from obj_type";
-            //executa a query e guarda o retorno na variavel
+
             $resultado_seleciona_tipos=executa_query($query_seleciona_tipos);
-            //ciclo para percorrer todos os objetos e indicar os vários tipos de objeto
+
+            // ciclo que percorre o array associativo
             while ($array_seleciona_tipos = mysqli_fetch_array($resultado_seleciona_tipos)) {
                 $id=$array_seleciona_tipos["id"];
-                // name da tabela obj_type 
+
                 $tipo=$array_seleciona_tipos["name"];         
             ?>
             <!-- <td> -->
@@ -175,7 +174,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         ?>
         <h3><b>Gestão de objetos - inserção</b></h3>
         <?php
-        //          Francisco Pontes
+
         //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
         $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);
         $object_estado = guarda_variavel($_REQUEST['estado']);
@@ -206,10 +205,10 @@ if ($_REQUEST["estado_execucao"] == "") {
         }
         
         else {
-            //              Francisco Pontes
-            //define a query para inserir valores
+
+            // código SQL em formato string para inserir novos objetos
             $query_inserir = "INSERT INTO `object` (`id`, `name`, `state`, `obj_type_id`) VALUES (NULL,'$object_nome_do_objeto','$object_estado','$object_obj_type_id')"; 
-            //executa a query
+
             $result_insert = executa_query($query_inserir);
  
             if ($result_insert) {
