@@ -63,7 +63,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
                     
                     $num_rows_attribute = mysqli_num_rows($resultado_attribute); // Conta as linhas para juntar na mesma 'parcela'
-                    echo $num_rows_attribute;
+                    
                     ?>
                     <tbody>
                     <tr> <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
