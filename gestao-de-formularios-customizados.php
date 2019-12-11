@@ -50,7 +50,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                 </tr>
 
                 <?php
-                while ($array_formularios_customizados = mysqli_fetch_assoc($resultado_formularios_customizados)) {
+                while ($array_formularios_customizados = mysqli_fetch_assoc($resultado_formularios_customizados)) { // O msqli_fetch_assoc serve para buscar uma linha de resultado como um array associativo 
 
                     // A query vai selecionar todos os atributos de attribut, para comparar os ids
                     $query_attribute = "SELECT DISTINCT attribute.* 
@@ -98,7 +98,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
                             $resultado_tipo_unidade = executa_query($query_tipo_unidade); // Passa $query_tipo_unidade como parametro de executa_query e coloca o resultado na variavel $resultado_tipo_unidade
 
-                            // VER MELHOR
+                            //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                             $array_tipo_unidade = mysqli_fetch_assoc($resultado_tipo_unidade);
                             ?>
                             <td><?php echo $array_tipo_unidade['name'];?></td>
@@ -158,7 +158,6 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
         }     
     }       
 } else { // Se o utilizador não tiver autorização escreve a mensagem abaixo
-    //
     ?>
      Não tem autorização para aceder a esta página.
 <?php
