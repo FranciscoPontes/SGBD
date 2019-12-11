@@ -50,7 +50,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                 </tr>
 
                 <?php
-                while ($array_formularios_customizados = mysqli_fetch_assoc($resultado_formularios_customizados)) {
+                while ($array_formularios_customizados = mysqli_fetch_assoc($resultado_formularios_customizados)) { // O msqli_fetch_assoc serve para buscar uma linha de resultado como um array associativo 
 
                     // A query vai selecionar todos os atributos de attribut, para comparar os ids
                     $query_attribute = "SELECT DISTINCT attribute.* 
