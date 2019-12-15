@@ -125,7 +125,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         <h3><strong>Gestão de Objetos - <span>Introdução</span></strong></h3>
  
         <!--criação do formulário de inserção de objetos-->
-        <form name="gestao_de_objetos"  method="post">
+        <form name="gestao_de_objetos">
         <p>
             <label><b>Nome:</b></label>
             <input type="text" name="nome_do_objeto">
@@ -155,10 +155,10 @@ if ($_REQUEST["estado_execucao"] == "") {
             <label><b>Estado:</b></label>
             <div>
                 <label><b>Ativo</b></label>
-                <input type="radio" name="estado" value="ativo"> <!-- estado ativo-->
+                <input type="radio" name="estado" value="active"> <!-- estado ativo-->
  
                 <label><b>Inativo</b></label>
-                <input type="radio" name="estado" value="inativo">
+                <input type="radio" name="estado" value="inactive">
             </div>
         </p>
             <br>
@@ -168,49 +168,6 @@ if ($_REQUEST["estado_execucao"] == "") {
         </form>
         <?php
     }
- 
-    // Gestão de objetos-Inserção
-    elseif ($_REQUEST["estado_execucao"] == "inserir") {              
-        ?>
-        <h3><b>Gestão de objetos - inserção</b></h3>
-        <?php
-
-        //usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
-        $object_nome_do_objeto = guarda_variavel($_REQUEST['nome_do_objeto']);
-        $object_estado = guarda_variavel($_REQUEST['estado']);
-        //variavel para guardar o obj_type_id do objeto que corresponderá a um certo tipo 
-        $object_obj_type_id = guarda_variavel($_REQUEST['tipo_de_objeto']);
-        if (empty($object_nome_do_objeto)) {
-            ?>
-            <p>É necessário indicar um nome para o objeto.<p>
-            <?php
-            // faz verificação, para ver se o object_nome_do_objeto não está vazio
-            back();                    
- 
-            }elseif (is_null($object_obj_type_id)) {
-            ?>
-            <p>É necessário indicar o tipo de objeto.<p>
-            <?php
-            }
-            ?>
-         </p>
-         <p> <!--aqui-->
-             <label><b>Estado:</b></label>
-             <div>
-                 <label><b>Ativo</b></label>
-                 <input type="radio" name="estado" value="ativo"> <!-- estado ativo-->
-  
-                 <label><b>Inativo</b></label>
-                 <input type="radio" name="estado" value="inativo">
-             </div>
-         </p>
-             <br>
-             <input type= "hidden" name= "estado_execucao" value= "inserir">
-             <input class= "button" type= "submit" value= "Inserir objeto">
-             <br><br>
-         </form>
-         <?php
-     }
   
      // Gestão de objetos-Inserção
      elseif ($_REQUEST["estado_execucao"] == "inserir") {              
@@ -237,7 +194,7 @@ if ($_REQUEST["estado_execucao"] == "") {
               
              // faz verificação, para ver se o object_tipo_de_objeto não está vazio
              back();                    
-             }elseif (empty($object_estado)) {
+             }elseif (is_null($object_estado)) {
              ?>
              <p>É necessário indicar o estado do objeto.<p>
              <?php
