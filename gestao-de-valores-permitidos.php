@@ -3,7 +3,6 @@ require_once("custom/php/common.php");
 
 // faz verificação, para ver se o utilizador está logado e se ter permissão para alterar objetos
 if (is_user_logged_in() && current_user_can('manage_allowed_values')) {        
- 
 $liga =liga_basedados();
 
 // Quando o estado da execução não está definido
