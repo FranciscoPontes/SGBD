@@ -111,13 +111,14 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             <td> - </td>
                             <?php
                         }
-                        // aqui
+                        // NOVA QUERY
                         $ordem= "SELECT field_order
                         From custom_form_has_attribute
                         where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'";
                 
                         $resultado_ordem=executa_query($ordem); // executa
-
+                        
+                        //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                         $array_resultado=mysqli_fetch_assoc($resultado_ordem);
 
                         ?>
@@ -202,7 +203,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         $query_objeto = "SELECT * FROM object"; // Query para obter todos os tuplos da tabela object
                         $resultado_objeto = executa_query($query_objeto); // Execução da query($query_objeto)
 
-                        foreach ($resultado_objeto AS $obj) {// Para cada umas das linhas da query($query_objeto)
+                        foreach ($resultado_objeto AS $obj) { // Estrutura para percorrer os elementos de um array, para cada iteração o valor do elemento atual da Array é atribuído ao valor $obj. 
                             
                             // Seleciona todos os atributos da tabela attribute se ids forem iguais
                             $query_atributo = "SELECT attribute.* 
@@ -222,7 +223,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                     <?php echo $obj['name']; ?>
                                 </td>
                                 <?php
-                                foreach ($resultado_atributo as $atributo) {
+                                foreach ($resultado_atributo as $atributo) {// Estrutura para percorrer os elementos de um array, para cada iteração o valor do elemento atual da Array é atribuído ao valor $atributo. 
                                     // Tabela que contém os valores dos atributos
                                     ?>
                                     <td><?php echo $atributo['id'];?></td>
@@ -339,7 +340,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             
             $custom_form_id = mysqli_insert_id($liga); // ID do novo formulário(último inserido)
 
-            foreach($check as $chave => $valor)  //percorre o array $check sendo $chave o indice do array e $valor os dados desse indice
+            foreach($check as $chave => $valor)  // Percorre o array $check sendo $chave o indice do array e $valor os dados desse indice
             {
 
                 $ordem = $_REQUEST['order_'.$valor]; // Recebe a ordem como input
@@ -349,6 +350,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     
                     $custom_form_id_v=guarda_variavel($custom_form_id); // Faz verificação
                     $valor_v=guarda_variavel($valor); // Faz verificação
+                    
                     // Query para inserir id do novo formulario e atributo_id com os valores passados pelo ('$custom_form_id_v','$valor')
                     $query_inserir_custom_f_h_attribute ="INSERT INTO custom_form_has_attribute (`custom_form_id`,`attribute_id`) 
 													      VALUES ('$custom_form_id_v','$valor_v')";
