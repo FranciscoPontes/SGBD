@@ -111,10 +111,11 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             <td> - </td>
                             <?php
                         }
-                        // NOVA QUERY
+                        // NOVA QUERY // query para a inserção da ordem
                         $ordem= "SELECT field_order
-                        From custom_form_has_attribute
-                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'";
+                        From custom_form_has_attribute, custom_form
+                        --where custom_form_has_attribute.attribute_id='{$array_attribute['id']}';
+                        where custom_form_has_attribute.custom_form_id= custom_form.id";
                 
                         $resultado_ordem=executa_query($ordem); // executa
                         
@@ -381,6 +382,206 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                 <?php
             }
         }
+
+        // -------RT-08-----
+    }elseif ($_REQUEST['estado_execucao'] == "editar_form") {
+       
+        // Estado editar formulários
+        
+        ?>
+        <h3><b>Gestão de formulários customizados - Editar</b></h3>
+            <?php
+            // vai buscar o id do formulario ao URL ALTERAR
+            $custom_form_id = $_GET['id'];
+
+            // Query para buscar o nome do formulario
+            $query_nome_formulario = " SELECT name 
+                                        FROM custom_form 
+                                        WHERE id = '$custom_form_id'";
+
+            // Execução da query
+            $resultado_nome_formulario = executa_query($query_nome_formulario);
+
+            // fetch do array associativo ALTERAR
+            $array_nome_formulario = mysqli_fetch_assoc($resultado_nome_formulario);
+            ?>
+            <form name="gestao-de-formularios-editar" method="POST">
+                <fieldset> <!-- Contorno ALTERAR -->
+                    <input type="hidden" name="estado" value="atualizar_form_custom">
+                    <p>
+                        <label><b>Nome do Formulário:</b></label>
+                        <input type="text" name="form_name" value="<?php echo $array_nome_formulario['name']; ?>">
+                    </p>
+
+                    <table class="mytable">
+                        <thead>
+                        <tr>
+                            <th>Objectos</th>
+                            <th>ID</th>
+                            <th>Atributo</th>
+                            <th>Tipo de Valor</th>
+                            <th>Nome do Campo no Formulário</th>
+                            <th>Tipo do Campo no Formulário</th>
+                            <th>Tipo de Unidade</th>
+                            <th>Ordem do Campo no Formulário</th>
+                            <th>Tamanho do Campo no Formulário</th>
+                            <th>Obrigatorio</th>
+                            <th>Estado</th>
+                            <th>Escolher</th>
+                            <th>Ordem</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+
+                        // Query para buscar o id e o name da tabela object
+                        $query_objeto = " SELECT id, name
+                                       FROM object";
+
+                        // Execução da query acima
+                        $resultado_objeto = executa_query($query_objeto );
+
+                        // ciclo para percorrer linha a linha-ALTERAR-
+                        while ($array_objeto = mysqli_fetch_assoc($resultado_objeto)) {
+                            
+                            // Query para selecionar todos os atributos da tabela attribute
+                            $query_atributo = "SELECT * 
+                                                    FROM attribute
+                                                    WHERE obj_id ='{$array_objeto["id"]}'";
+
+                            // Execução da query acima
+                            $resultado_atributo = executa_query($query_atributo);
+
+                            // Vai contar o número de linhas em $resultado_atributo
+                            $num_rows_atributo = mysqli_num_rows($resultado_atributo);
+                            ?>
+                            <tr>
+
+                            <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
+                            <td colspan="1" rowspan="<?php echo $num_rows_atributo; ?>">
+                                <?php echo $array_objeto['name']; ?>
+                            </td>
+
+                            <?php
+                            while ($array_atributo = mysqli_fetch_assoc($resultado_atributo)) {
+                                ?>
+                                <td> <?php echo $array_atributo['id']; ?> </td>
+                                <td> <?php echo $array_atributo['name']; ?> </td>
+                                <td> <?php echo $array_atributo['value_type']; ?> </td>
+                                <td> <?php echo $array_atributo['form_field_name']; ?> </td>
+                                <td> <?php echo $array_atributo['form_field_type']; ?> </td>
+                                <?php
+
+                                // Se o unit_type_id do $array_obj_attr não for nulo
+                                if ($array_atributo['unit_type_id'] != null) {
+                                  
+                                    // Query para selecionar o name da tabela attr_unit_type
+                                    $query_unit_types = " SELECT name
+                                                          FROM attr_unit_type
+                                                          WHERE " . $array_atributo['unit_type_id'] . " = id";
+                                    
+                                    // Execução da query acima
+                                    $resultado_unit_types = executa_query($query_unit_types);
+
+                                    //fetch ALTERAR
+                                    $array_unit_types = mysqli_fetch_assoc($resultado_unit_types);
+                                    ?>
+                                    <td>
+                                        <?php echo $array_unit_types['name']; ?>
+                                    </td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td>-</td>
+                                    <?php
+                                }
+                                ?>
+                                <td> <?php echo $array_atributo['form_field_order']; ?> </td>
+                                <?php
+                               
+                                if ($array_atributo['form_field_size'] != null) {
+                                    ?>
+                                    <td> <?php echo $array_atributo['form_field_size']; ?> </td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td>-</td>
+                                    <?php
+                                }
+                                
+                                // Se for obrigatório
+                                if ($array_atributo['mandatory'] == 1) {
+                                    ?>
+                                    <td>sim</td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td>não</td>
+                                    <?php
+                                }
+
+                                // Se o estado for ativo
+                                if ($array_atributo['state'] == "active") {
+                                    ?>
+                                    <td> activo</td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td> inactivo</td>
+                                    <?php
+                                }
+
+                                // Query para selecionar o attribute_id, custom_form_id e field_order da tabela custom_form_has_attribute
+                                $query_form_has_attr = " SELECT attribute_id, custom_form_id, field_order
+                                                        FROM custom_form_has_attribute 
+                                                        WHERE custom_form_id = '{$custom_form_id}' 
+                                                        AND attribute_id = '{$array_atributo['id']}'";
+
+                                // Execução da query acima
+                                $resultado_form_has_attr = executa_query($query_form_has_attr);
+
+                                //fetch:ALTERAR
+                                $array_form_has_attr = mysqli_fetch_assoc($resultado_form_has_attr);
+
+                                // Se os id são iguais
+                                if ($array_atributo['id'] == $array_form_has_attr['attribute_id']) {
+                                    ?>
+                                    <td>
+                                                <!-- Faz a analise de todos os campos com [] -->
+                                        <input type="checkbox" name="check[]" value="<?php echo $array_atributo['id']; ?>" CHECKED>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="order_<?php echo $array_atributo['id']; ?>" value="<?php echo $array_form_has_attr['field_order']; ?>">
+                                    </td>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <td>
+                                               
+                                                <!-- Faz a analise de todos os campos com [] -->
+                                        <input type="checkbox" name="check[]" value="<?php echo $array_atributo['id']; ?>">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="order_<?php echo $array_atributo['id']; ?>">
+                                    </td>
+                                    <?php
+                                }
+                                ?>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                    <p>
+                        <input type="submit" value="Atualizar Formulario">
+                    </p>
+                </fieldset>
+            </form>
+            <?php
+        ?>
+       <?php
     }          
 }       
      else { // Se o utilizador não tiver autorização escreve a mensagem abaixo
