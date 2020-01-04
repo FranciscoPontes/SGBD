@@ -74,8 +74,9 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             echo '
                                         <a href="gestao-de-formularios?estado=editar_form&id=' . $array_formularios_customizados['id'] . '">
                                             ' . $array_formularios_customizados['name'] . ' 
-                                        </a>';
+                                        </a>'; 
                             ?>
+                            
                         </td>
                         <?php
                         // Preencher o resto da tabela com os valores da tabela atributo
@@ -113,9 +114,9 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         }
                         // NOVA QUERY // query para a inserção da ordem
                         $ordem= "SELECT field_order
-                        From custom_form_has_attribute, custom_form
-                        --where custom_form_has_attribute.attribute_id='{$array_attribute['id']}';
-                        where custom_form_has_attribute.custom_form_id= custom_form.id";
+                        From custom_form_has_attribute
+                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'";
+                       
                 
                         $resultado_ordem=executa_query($ordem); // executa
                         
@@ -308,6 +309,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                 
                 <input type="hidden" name="estado_execucao" value="inserir"><!-- Botão para o estado inserir-->
                 <input class="button" type="submit" value="Criar Formulário">
+                <input type="hidden" name="estado_execucao" value="editar_form"><!-- Botão para o estado inserir-->
+                <input class="button" type="submit" value="EDITAR"> <!--botão feito editar-->
         </form>
         <?php // Estado Fechado
         
@@ -344,8 +347,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             foreach($check as $chave => $valor)  // Percorre o array $check sendo $chave o indice do array e $valor os dados desse indice
             {
 
-                $ordem = $_REQUEST['order_'.$valor]; // Recebe a ordem como input
-                if(empty($ordem)) // caso o campo ordem esteja vazio
+                $ordem_v = $_REQUEST['order_'.$valor]; // Recebe a ordem como input
+                if(empty($ordem_v)) // caso o campo ordem esteja vazio
                 {
                     
                     
@@ -364,11 +367,11 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     $custom_form_id_v=guarda_variavel($custom_form_id); // Verifica o input
                     
                     $valor_v=guarda_variavel($valor); // Verifica $valor
-                    $ordem= guarda_variavel($ordem);// Verifica $ordem 
+                    $ordem_v= guarda_variavel($ordem_v);// Verifica $ordem 
                     
                     // Query para inserir em custom_form_has_attribute nos atributos (`custom_form_id`, `attribute_id`, `field_order`) os valores ('$custom_form_id_v','$valor','$ordem')
                     $inserir_custom_f_h_attribute="INSERT INTO custom_form_has_attribute (`custom_form_id`, `attribute_id`, `field_order`) 
-														 VALUES ('$custom_form_id_v','$valor_v','$ordem')";
+														 VALUES ('$custom_form_id_v','$valor_v','$ordem_v')";
                     $resultado_ins_custom_form_has_attr = mysqli_query($liga,$inserir_custom_f_h_attribute); // Execução da query, executa uma consulta na base de dados.
                    
                 }
@@ -380,6 +383,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                 <p>Inseriu os dados para o novo formulário com sucesso.</p>
                 <p>Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.</p><br>
                 <?php
+                
             }
         }
 
