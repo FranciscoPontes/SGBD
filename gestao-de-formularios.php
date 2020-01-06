@@ -72,9 +72,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             <!-- Após  o nome gestao-de-formularios-custmizados são passados o estado= editar_form e é passado o id enquanto que o name é colocado na tabela-->
                             <?php 
                             echo '
-                                        <a href="gestao-de-formularios?estado=editar_form&id=' . $array_formularios_customizados['id'] . '">
+                                        <a href="gestao-de-formularios?estado_execucao=editar_form&id=' . $array_formularios_customizados['id'] . '">
                                             ' . $array_formularios_customizados['name'] . ' 
                                         </a>'; 
+                                        
                             ?>
                             
                         </td>
@@ -114,8 +115,9 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         }
                         // NOVA QUERY // query para a inserção da ordem
                         $ordem= "SELECT field_order
-                        From custom_form_has_attribute
-                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'";
+                        From custom_form_has_attribute, custom_form
+                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'
+                       and  custom_form_has_attribute.custom_form_id= custom_form.id";
                        
                 
                         $resultado_ordem=executa_query($ordem); // executa
@@ -152,7 +154,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         if ($array_attribute['state'] == "active") { // Se  o estado for ativo escreve o que está abaixo 
                             ?>
                             <td>Activo</td> 
-                            <td>[editar]<br>[desactivar]</td>
+                            <td>
+                            <br>[desactivar]</td>
                             <?php
                         } else { // Se o estado for inativo escreve o que está abaixo
                             ?>
@@ -309,16 +312,15 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                 
                 <input type="hidden" name="estado_execucao" value="inserir"><!-- Botão para o estado inserir-->
                 <input class="button" type="submit" value="Criar Formulário">
-                <input type="hidden" name="estado_execucao" value="editar_form"><!-- Botão para o estado inserir-->
-                <input class="button" type="submit" value="EDITAR"> <!--botão feito editar-->
+                
         </form>
         <?php // Estado Fechado
         
     }
     elseif($_REQUEST['estado_execucao'] == "inserir")
     {
-        // Verifica 'form_name'
-        $nome_formulario = guarda_variavel($_REQUEST['form_name']);
+        // Verifica o nome do formulário
+        $nome_formulario = guarda_variavel($_REQUEST['form_name']); // Verifica se tem caracteres especiais
         $check= $_REQUEST['check']; // Busca o array do check[] visto acima
 
         if(empty($nome_formulario)) // Se nome formulario for vazio da erro
@@ -410,7 +412,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             $array_nome_formulario = mysqli_fetch_assoc($resultado_nome_formulario);
             ?>
             <form name="gestao-de-formularios-editar" method="POST">
-                <fieldset> <!-- Contorno ALTERAR -->
+                
                     <input type="hidden" name="estado" value="atualizar_form_custom">
                     <p>
                         <label><b>Nome do Formulário:</b></label>
@@ -420,7 +422,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     <table class="mytable">
                         <thead>
                         <tr>
-                            <th>Objectos</th>
+                            <th>Objeto</th>
                             <th>ID</th>
                             <th>Atributo</th>
                             <th>Tipo de Valor</th>
@@ -455,16 +457,18 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
                             // Execução da query acima
                             $resultado_atributo = executa_query($query_atributo);
-
+                            
                             // Vai contar o número de linhas em $resultado_atributo
                             $num_rows_atributo = mysqli_num_rows($resultado_atributo);
+                            
+                            if ($num_rows_atributo > 0) {
                             ?>
                             <tr>
-
                             <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
-                            <td colspan="1" rowspan="<?php echo $num_rows_atributo; ?>">
-                                <?php echo $array_objeto['name']; ?>
-                            </td>
+                            <td colspan="1" rowspan="<?php echo $num_rows_atributo;?>">
+                                 <?php echo $array_objeto['name']; ?>
+                            
+                           
 
                             <?php
                             while ($array_atributo = mysqli_fetch_assoc($resultado_atributo)) {
@@ -569,11 +573,13 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                         <input type="number" name="order_<?php echo $array_atributo['id']; ?>">
                                     </td>
                                     <?php
+                                    
                                 }
                                 ?>
                                 </tr>
                                 <?php
                             }
+                        }
                         }
                         ?>
                         </tbody>
@@ -581,7 +587,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     <p>
                         <input type="submit" value="Atualizar Formulario">
                     </p>
-                </fieldset>
+            
             </form>
             <?php
         ?>
