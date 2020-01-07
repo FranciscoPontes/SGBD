@@ -154,7 +154,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         if ($array_attribute['state'] == "active") { // Se  o estado for ativo escreve o que está abaixo 
                             ?>
                             <td>Activo</td> 
-                            <td>
+                            <td>[editar]
                             <br>[desactivar]</td>
                             <?php
                         } else { // Se o estado for inativo escreve o que está abaixo
@@ -397,7 +397,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
         ?>
         <h3><b>Gestão de formulários customizados - Editar</b></h3>
             <?php
-            // vai buscar o id do formulario ao URL ALTERAR
+            // Busca o id formulário ao URL 
             $custom_form_id = $_GET['id'];
 
             // Query para buscar o nome do formulario
@@ -408,7 +408,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             // Execução da query
             $resultado_nome_formulario = executa_query($query_nome_formulario);
 
-            // fetch do array associativo ALTERAR
+            // O msqli_fect_assoc busca uma linha de resultado como um array associativo
             $array_nome_formulario = mysqli_fetch_assoc($resultado_nome_formulario);
             ?>
             <form name="gestao-de-formularios-editar" method="POST">
@@ -447,13 +447,13 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         // Execução da query acima
                         $resultado_objeto = executa_query($query_objeto );
 
-                        // ciclo para percorrer linha a linha-ALTERAR-
+                        // Ciclo para percorrer linha a linha //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                         while ($array_objeto = mysqli_fetch_assoc($resultado_objeto)) {
                             
                             // Query para selecionar todos os atributos da tabela attribute
                             $query_atributo = "SELECT * 
-                                                    FROM attribute
-                                                    WHERE obj_id ='{$array_objeto["id"]}'";
+                                                FROM attribute
+                                                WHERE obj_id ='{$array_objeto["id"]}'";
 
                             // Execução da query acima
                             $resultado_atributo = executa_query($query_atributo);
@@ -471,6 +471,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                            
 
                             <?php
+                            // Ciclo para percorrer linha a linha //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                             while ($array_atributo = mysqli_fetch_assoc($resultado_atributo)) {
                                 ?>
                                 <td> <?php echo $array_atributo['id']; ?> </td>
@@ -491,7 +492,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                     // Execução da query acima
                                     $resultado_unit_types = executa_query($query_unit_types);
 
-                                    //fetch ALTERAR
+                                    // O msqli_fect_assoc busca uma linha de resultado como um array associativo
                                     $array_unit_types = mysqli_fetch_assoc($resultado_unit_types);
                                     ?>
                                     <td>
@@ -520,22 +521,22 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                 // Se for obrigatório
                                 if ($array_atributo['mandatory'] == 1) {
                                     ?>
-                                    <td>sim</td>
+                                    <td>SIM</td>
                                     <?php
                                 } else {
                                     ?>
-                                    <td>não</td>
+                                    <td>NÃO</td>
                                     <?php
                                 }
 
                                 // Se o estado for ativo
                                 if ($array_atributo['state'] == "active") {
                                     ?>
-                                    <td> activo</td>
+                                    <td>Activo</td>
                                     <?php
                                 } else {
                                     ?>
-                                    <td> inactivo</td>
+                                    <td>Inactivo</td>
                                     <?php
                                 }
 
@@ -548,7 +549,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                 // Execução da query acima
                                 $resultado_form_has_attr = executa_query($query_form_has_attr);
 
-                                //fetch:ALTERAR
+                                // O msqli_fect_assoc busca uma linha de resultado como um array associativo
                                 $array_form_has_attr = mysqli_fetch_assoc($resultado_form_has_attr);
 
                                 // Se os id são iguais
