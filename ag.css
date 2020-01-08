@@ -1,0 +1,14 @@
+.tabela-attr {
+    margin: 4px;
+}
+
+.mytable td, .mytable th {
+    margin: 0  !important;
+    border: 1px solid !important;
+    padding: 1px !important;
+    font-size: 11px  !important;
+}
+
+.mytable tr .attr-id {
+    text-align: center;
+}

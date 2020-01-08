@@ -16,10 +16,10 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
 
         // Verifica se há atributos e se não houver dá mensagem de erro
         if (mysqli_num_rows($resultado_attribute) == 0) {    
-            echo "Não há propriedades especificadas";        
+            echo "Não há atributos especificados";        
         } else {
             ?>
-            <table class="mytable">
+            <table class="mytable tabela-attr">
                 <thead>
                     <tr>
                         <th>objeto</th>
@@ -71,7 +71,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                     // Criação de um array com os valores da query guardados na variável $result_attributes
                     while ($array_attributes = mysqli_fetch_array($result_attributes)) {              
                         ?>
-                        <td><?php
+                        <td class="attr-id"><?php
                             echo $array_attributes['id']; ?>
                             </td>
                         <td><?php
@@ -247,6 +247,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
         <h3><b>Gestão de Atributos - Inserção</b></h3>
         <?php
 
+        $erro = 0;
         // Usa a funcao guarda_variavel para guardar nas variáveis os inputs sem carateres especiais
         $object_nome_do_atributo = guarda_variavel($_REQUEST['nome_do_atributo']);
         $object_tipo_de_valor = guarda_variavel($_REQUEST['tipo_de_valor']);
@@ -259,42 +260,49 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             $object_objeto_referenciado = guarda_variavel($_REQUEST['objeto_referenciado']);
 
         if (empty($object_nome_do_atributo)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar um nome para o atributo.<p>
             <?php
             back();                    
     
-        } elseif (empty($object_tipo_de_valor)) {
+        } if (empty($object_tipo_de_valor)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar o tipo de valor.<p>
             <?php
             back();                    
-        } elseif (empty($object_objeto)) {
+        } if (empty($object_objeto)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar um objeto.<p>
             <?php
             back();   
-        } elseif (empty($object_tipo_formulario)) {
+        } if (empty($object_tipo_formulario)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar um nome para o campo do formulário.<p>
             <?php
             back();  
-        } elseif (empty($object_ordem_formulario)) {
+        } if (empty($object_ordem_formulario)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar uma ordem para o campo do formulário.<p>
             <?php
             back(); 
-        } elseif (empty($object_tamanho_formulario)) {
+        } if (empty($object_tamanho_formulario)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar um tamanho para o campo do formulário.<p>
             <?php
             back();     
-        } elseif (empty($object_obrigatorio)) {
+        } if (empty($object_obrigatorio)) {
+            $erro = 1;
             ?>
             <p>É necessário indicar se é obrigatório ou não.<p>
             <?php
             back();       
-        } else {
+        } if ($erro == 1) {
             if($object_obrigatorio == "sim") {
                 $object_obrigatorio = 1;
             } else {
@@ -312,7 +320,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             if ($result_insert) {
             mysqli_query($liga,'COMMIT');
             ?>
-            <p>Inserção de dados feita com sucesso!
+            <p>Inseriu os dados de novo tipo de unidade com sucesso!
             Clique  em <a href="gestao-de-atributos">continuar</a> para avançar.
             <!-- $string = preg_replace('/[^a-z0-9_ ]/i', '', $string);) -->
             <br/>
