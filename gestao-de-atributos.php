@@ -1,5 +1,10 @@
 <?php
 require_once ("custom/php/common.php");
+// add_action( 'admin_enqueue_scripts', 'load_admin_style' );
+// function load_admin_style() {
+//     wp_register_style( 'admin_css', 'custom/css/gestao-de-atributos.css', false, '1.0.0' );
+// }
+
  
 // Verifica se o utilizador fez login no wp e se tem permissão para mexer nos atributos
 if (is_user_logged_in() && current_user_can('manage_attributes')) {        
@@ -19,7 +24,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             echo "Não há atributos especificados";        
         } else {
             ?>
-            <table class="mytable">
+            <table class="mytable tabela-atr">
                 <thead>
                     <tr>
                         <th>objeto</th>
