@@ -1,10 +1,5 @@
 <?php
 require_once ("custom/php/common.php");
-// add_action( 'admin_enqueue_scripts', 'load_admin_style' );
-// function load_admin_style() {
-//     wp_register_style( 'admin_css', 'custom/css/gestao-de-atributos.css', false, '1.0.0' );
-// }
-
  
 // Verifica se o utilizador fez login no wp e se tem permissão para mexer nos atributos
 if (is_user_logged_in() && current_user_can('manage_attributes')) {        
@@ -24,7 +19,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             echo "Não há atributos especificados";        
         } else {
             ?>
-            <table class="mytable tabela-atr">
+            <table class="mytable tabela-attr">
                 <thead>
                     <tr>
                         <th>objeto</th>
@@ -76,7 +71,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                     // Criação de um array com os valores da query guardados na variável $result_attributes
                     while ($array_attributes = mysqli_fetch_array($result_attributes)) {              
                         ?>
-                        <td><?php
+                        <td class="attr-id"><?php
                             echo $array_attributes['id']; ?>
                             </td>
                         <td><?php
