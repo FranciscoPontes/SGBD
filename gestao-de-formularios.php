@@ -1,4 +1,5 @@
 
+
 <?php
 require_once("custom/php/common.php");
 
@@ -120,7 +121,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                        and  custom_form_has_attribute.custom_form_id= custom_form.id";
                        
                 
-                        $resultado_ordem=executa_query($ordem); // executa
+                        $resultado_ordem=executa_query($ordem); // Executa a query acima
                         
                         //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                         $array_resultado=mysqli_fetch_assoc($resultado_ordem);
@@ -321,6 +322,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
     {
         // Verifica o nome do formulário
         $nome_formulario = guarda_variavel($_REQUEST['form_name']); // Verifica se tem caracteres especiais
+       
         $check= $_REQUEST['check']; // Busca o array do check[] visto acima
 
         if(empty($nome_formulario)) // Se nome formulario for vazio da erro
@@ -350,15 +352,16 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             {
 
                 $ordem_v = $_REQUEST['order_'.$valor]; // Recebe a ordem como input
+
                 if(empty($ordem_v)) // caso o campo ordem esteja vazio
                 {
                     
                     
-                    $custom_form_id_v=guarda_variavel($custom_form_id); // Faz verificação
-                    $valor_v=guarda_variavel($valor); // Faz verificação
+                    $custom_form_id_v=guarda_variavel($custom_form_id); // Faz verificação para ver se tem caracteres especiais
+                    $valor_v=guarda_variavel($valor); // Faz verificação para ver se tem caracteres especiais
                     
                     // Query para inserir id do novo formulario e atributo_id com os valores passados pelo ('$custom_form_id_v','$valor')
-                    $query_inserir_custom_f_h_attribute ="INSERT INTO custom_form_has_attribute (`custom_form_id`,`attribute_id`) 
+                    $query_inserir_custom_f_h_attribute ="INSERT INTO custom_form_has_attribute (custom_form_id,attribute_id) 
 													      VALUES ('$custom_form_id_v','$valor_v')";
 
                     $resultado_ins_custom_form_has_attr = mysqli_query($liga, $query_inserir_custom_f_h_attribute); // Execução da query, executa uma consulta na base de dados.
@@ -366,10 +369,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                 }
                 else // Se o ordem não for vazio
                 {
-                    $custom_form_id_v=guarda_variavel($custom_form_id); // Verifica o input
+                    $custom_form_id_v=guarda_variavel($custom_form_id); // Faz verificação para ver se tem caracteres especiais
                     
-                    $valor_v=guarda_variavel($valor); // Verifica $valor
-                    $ordem_v= guarda_variavel($ordem_v);// Verifica $ordem 
+                    $valor_v=guarda_variavel($valor); // Faz verificação para ver se tem caracteres especiais
+                    $ordem_v= guarda_variavel($ordem_v);// Faz verificação para ver se tem caracteres especiais
                     
                     // Query para inserir em custom_form_has_attribute nos atributos (`custom_form_id`, `attribute_id`, `field_order`) os valores ('$custom_form_id_v','$valor','$ordem')
                     $inserir_custom_f_h_attribute="INSERT INTO custom_form_has_attribute (`custom_form_id`, `attribute_id`, `field_order`) 
@@ -413,7 +416,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             ?>
             <form name="gestao-de-formularios-editar" method="POST">
                 
-                    <input type="hidden" name="estado" value="atualizar_form_custom">
+                    <input type="hidden" name="estado_execucao" value="atualizar_formulario">
                     <p>
                         <label><b>Nome do Formulário:</b></label>
                         <input type="text" name="form_name" value="<?php echo $array_nome_formulario['name']; ?>">
@@ -589,10 +592,80 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         <input type="submit" value="Atualizar Formulario">
                     </p>
             
-            </form>
+            </form>  <!--RT-09--> 
             <?php
         ?>
-       <?php
+       <?php 
+    }else if ($_REQUEST['estado_execucao'] == "atualizar_formulario") {
+        
+        // Uso get para ir buscar o id do formulário ao URL
+        $custom_form_id = $_GET['id'];
+
+        // Faço verificação para ver se tem caracteres especiais
+        $nome_formulario = guarda_variavel($_REQUEST['form_name']);
+
+        //array "check[]" ALTERAR
+        $select = $_REQUEST['check'];
+
+        // Se nome do formuario for empty, dá mensagem de erro
+        if (empty($nome_formulario)) {
+            ?>
+            <p>Tem de escolher o nome do formulário.</p>
+            <?php
+            back();
+        } elseif (is_null($select)) { // Se o select for null, dá mensagem de erro
+            ?>
+            <p>Tem de escolher pelo menos um atributo.</p>
+            <?php
+            back();
+        } else {
+
+            // Query para o update do nome do formulário cujo id é igual ao id do $custom_form_id 
+            $novo_nome = " UPDATE `custom_form` SET `name` = '$nome_formulario' WHERE `id` = '$custom_form_id' ";
+
+            // Execução da query acima na BD
+            $resultado_update_nome = executa_query($novo_nome);
+
+            //DELETE - para retirar o valor antigo, que agora foi atualizado ALTERAR
+            $elimina_custom_form_has_attribute = "DELETE FROM `custom_form_has_attribute` WHERE `custom_form_id` = '$custom_form_id'";
+
+            $resultado_eliminar = executa_query($elimina_custom_form_has_attribute);
+
+            // Foreach serve para percorrer o array pelo indice, onde $select é o array e $index é o indice do mesmo
+            // e $id_checks os dados associados ao indice
+            foreach ($select as $index => $id_checks) {
+                $ordem = $_REQUEST['order_' . $id_checks];
+
+                // Se ordem for emptyo então o valor da ordem fica null na BD 
+                if (empty($ordem)) {
+
+                    // Query Update, insere o custom_form_id e o id_checks na tabela custom_form_has_atribute
+                    $update_custom_form_has_attr = " INSERT INTO custom_form_has_attribute (`custom_form_id`,`attribute_id`) 
+                                                VALUES ('$custom_form_id', '$id_checks')";
+                    // Execução da query acima 
+                    $resultado_update_custom_form_has_attribute = executa_query($update_custom_form_has_attr);
+
+                } // Se ordem não for empty, insere o valor da ordem no formulário 
+                else {
+
+                    // Query Update, insere o $custom_form_id, o $id_checks e a $ordem no na tabela custom_form_has_attribute
+                    $update_custom_form_has_attr = " INSERT INTO custom_form_has_attribute (`custom_form_id`, `attribute_id`, `field_order`) 
+                                                VALUES ('$custom_form_id', '$id_checks','$ordem')";
+
+                    // Executa a query acima
+                    $resultado_update_custom_form_has_attribute = executa_query($update_custom_form_has_attr);
+                }
+            }
+
+            // Se os três se confirmarem então a transação foi feita com sucesso
+            if ($resultado_update_nome && $resultado_update_custom_form_has_attribute && $resultado_eliminar) {
+                mysqli_query($liga,'COMMIT');
+                ?>
+                Os dados do formulário foram atualizados com sucesso.
+                Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.
+                <?php
+            }
+        }
     }          
 }       
      else { // Se o utilizador não tiver autorização escreve a mensagem abaixo

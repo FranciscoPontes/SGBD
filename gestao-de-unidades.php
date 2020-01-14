@@ -10,22 +10,22 @@ $liga =liga_basedados();
 // Se o estado de execução não estiver definido
 if ($_REQUEST["estado_execucao"] == "") {    
  
-    //  utiliza a $query_object para colocar o código na query SQL, guarda na variável
+    //  Utiliza a $query_object para colocar o código na query SQL, guarda na variável
     $query_object = "SELECT * FROM  attr_unit_type  ORDER BY name" ;
 
-    // usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object, executa a query e guarda na variável
+    // Usa a função executa_query definida no common e executa o SQL na base de dados, coloca o valor em $result_object, executa a query e guarda na variável
     $result_object = executa_query($query_object);  
 
-    // faz verificação para ver se existem objetos, caso não haja dá "Não  há tipos de unidades"
+    // Faz verificação para ver se existem objetos, caso não haja dá "Não  há tipos de unidades"
     if (mysqli_num_rows($result_object) == 0) {    
         echo "Não há tipos de unidades";        
     } else {
         ?>
-                <!--criação da tabela-->
+                <!-- Criação da tabela -->
         <table class="mytable"> 
             <thead>
                 <tr>
-                <!-- parametros da tabela-->
+                <!-- Parametros da tabela -->
                     <th>Id</th> 
                     <th>Name</th>  
                 </tr>
@@ -69,7 +69,8 @@ if ($_REQUEST["estado_execucao"] == "") {
         ?>
                 <h3>Gestão de unidades - inserção</h3>
                 <?php
-                    //  Pedido do valor unidade, que depois é passado a função guarda_variavel e coloca em $unidade
+                    //  Pedido do valor unidade, que depois é passado a função guarda_variavel e coloca em $unidade 
+                    // Verifica se tem caracteres especiais
                     $unidade= guarda_variavel($_REQUEST['name']);
 
                     // Caso o valor em $unidade seja vazio, não avança e dá a mensagem Insira o nome de uma unidade
