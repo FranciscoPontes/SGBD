@@ -28,6 +28,21 @@
         return $retorno;
     }
     
+    // utilizada na pesquisa dinamica para os trios
+    function operadores($tipo){
+        if ($tipo=='enum' or $tipo=='bool' or $tipo=='text' or $tipo=='obj_ref'){
+            $op=array("Igual"=>"=","Diferente"=>"!=");
+        }
+        else {
+            $op=array("Menor"=>"<","Maior"=>">","Igual"=>"=","Diferente"=>"!=");
+        }
+        //echo nl2br("\nOperador:<select name=operador_><option>  ");
+        foreach($op as $k=>$v){
+            echo "<option value='" . $k . "'>" . $v . "</option>";
+        }
+        //echo nl2br("</select>");
+
+    }
 
 ?>
 <!--
