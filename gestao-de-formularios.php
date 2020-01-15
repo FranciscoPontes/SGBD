@@ -643,7 +643,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             // Execução da query acima na BD
             $resultado_update_nome = executa_query($novo_nome);
 
-            //DELETE - para retirar o valor antigo, que foi atualizado ALTERAR
+            //DELETE -  retirar o valor antigo, coloca o atualizado 
             $elimina_custom_form_has_attribute = "DELETE FROM `custom_form_has_attribute` WHERE `custom_form_id` = '$custom_form_id'";
 
             $resultado_eliminar = executa_query($elimina_custom_form_has_attribute);
