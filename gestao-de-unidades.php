@@ -26,8 +26,8 @@ if ($_REQUEST["estado_execucao"] == "") {
             <thead>
                 <tr>
                 <!-- Parametros da tabela -->
-                    <th scope="col">Id</th> 
-                    <th scope="col">Name</th>  
+                    <th scope="coluna">Id</th> 
+                    <th scope="coluna">Name</th>  
                 </tr>
 
             </thead>

@@ -9,10 +9,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
     // Realizo a ligação com a base de dados
     $liga =  liga_basedados();
 
-      // estado_execução == "" -estado inicial-
+      // estado_execução == "" estado inicial
     if ($_REQUEST["estado_execucao"] == "") {
         ?>
-        <h3>Gestão de Formulários Customizados</h3>
+        <h3 id="h3">Gestão de Formulários Customizados</h3>
         <?php
         
        
@@ -36,18 +36,18 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             <!-- Criação da tabela -->
             <table class="mytable">
                 <tr> 
-                    <th scope="col"> Nome do Formulário</th>
-                    <th scope="col"> Id</th>
-                    <th scope="col">Atributo</th>
-                    <th scope="col">Tipo de Valor</th>
-                    <th scope="col">Nome do Campo no Formulário</th>
-                    <th scope="col">Tipo do Campo no Formulário</th>
-                    <th scope="col">Tipo de Unidade</th>
-                    <th scope="col">Ordem do Campo no Formulário</th>
-                    <th scope="col">Tamanho do Campo no Formulário</th>
-                    <th scope="col">Obrigatório</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acção</th>
+                    <th scope="coluna"> Nome do Formulário</th>
+                    <th scope="coluna"> Id</th>
+                    <th scope="coluna">Atributo</th>
+                    <th scope="coluna">Tipo de Valor</th>
+                    <th scope="coluna">Nome do Campo no Formulário</th>
+                    <th scope="coluna">Tipo do Campo no Formulário</th>
+                    <th scope="coluna">Tipo de Unidade</th>
+                    <th scope="coluna">Ordem do Campo no Formulário</th>
+                    <th scope="coluna">Tamanho do Campo no Formulário</th>
+                    <th scope="coluna">Obrigatório</th>
+                    <th scope="coluna">Estado</th>
+                    <th scope="coluna">Acção</th>
                 </tr>
 
                 <?php
@@ -75,9 +75,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             echo '
                                         <a href="gestao-de-formularios?estado_execucao=editar_form&id=' . $array_formularios_customizados['id'] . '">
                                             ' . $array_formularios_customizados['name'] . ' 
-                                        </a>'; 
+                                        </a>'; // Concatenação
                                         
                             ?>
+
                             
                         </td>
                         <?php
@@ -85,11 +86,11 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         while ($array_attribute = mysqli_fetch_assoc($resultado_attribute)) {
                         ?>
                         <!-- Valores para preencher a tabela, valores vêm de cima ($array_attribute) -->
-                        <td><?php echo $array_attribute['id']; ?></td>
-                        <td><?php echo $array_attribute['name']; ?></td>
-                        <td><?php echo $array_attribute['value_type']; ?></td>
-                        <td><?php echo $array_attribute['form_field_name']; ?></td>
-                        <td><?php echo $array_attribute['form_field_type']; ?></td>
+                        <td scope="td"><?php echo $array_attribute['id']; ?></td>
+                        <td scope="td"><?php echo $array_attribute['name']; ?></td>
+                        <td scope="td"><?php echo $array_attribute['value_type']; ?></td>
+                        <td scope="td"><?php echo $array_attribute['form_field_name']; ?></td>
+                        <td scope="td"><?php echo $array_attribute['form_field_type']; ?></td>
                         <?php
 
                        
@@ -106,62 +107,67 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                             $array_tipo_unidade = mysqli_fetch_assoc($resultado_tipo_unidade);
                             ?>
-                            <td><?php echo $array_tipo_unidade['name'];?></td>
+                            <td scope="td"><?php echo $array_tipo_unidade['name'];?></td>
                             <?php
                         // Se não existem unidades coloca o (-)
                         } else { 
                             ?>
-                            <td> - </td>
+                            <td scope="td"> - </td>
                             <?php
                         }
-                        // NOVA QUERY // query para a inserção da ordem
+                        // Query para a inserção da ordem
+                        // faço comparação do custom_form_has_attribute.attribute_id='{$array_attribute['id']}' 
+                        //para comparar o attribute id da tabela custom_form_has_attribute com o id do attributo do elemento atual do $array_attribute['id']}
+                        // faço custom_form_has_attribute.custom_form_id= '{$array_formularios_customizados["id"]}'" para
+                        // comparar o id do custom_form na tabela do custom_form_h_attribute com o id que está a ser percorrida no while
+
                         $ordem= "SELECT field_order
                         From custom_form_has_attribute, custom_form
                         where custom_form_has_attribute.attribute_id='{$array_attribute['id']}' 
                         and  custom_form_has_attribute.custom_form_id= '{$array_formularios_customizados["id"]}'";
                        
                 
-                        $resultado_ordem=executa_query($ordem); // Executa a query acima
+                        $resultado_ordem=executa_query($ordem); // Executa a query acima na BD
                         
                         //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
                         $array_resultado=mysqli_fetch_assoc($resultado_ordem);
 
                         ?>
-                        <td><?php echo $array_resultado['field_order']; ?></td>
+                        <td scope="td"><?php echo $array_resultado['field_order']; ?></td>
                         <?php
                         // Se o array for diferente de null, ou seja, não estiver vazio vai imprimir o valor do form_field_size
                         if ($array_attribute['form_field_size'] != null) { 
                             ?>
-                            <td><?php echo $array_attribute['form_field_size'];?></td>
+                            <td scope="td"><?php echo $array_attribute['form_field_size'];?></td>
                             <?php
                         // Se o array estiver vazio coloca o (-) 
                         } else { 
                             ?>
-                            <td> - </td>
+                            <td scope="td"> - </td>
                             <?php
                         }
 
                         // Se for obrigatório coloca 'SIM', se não for obrigatório coloca 'NÃO'
                         if ($array_attribute['mandatory'] == 1) {
                             ?>
-                            <td>SIM</td>
+                            <td scope="td">SIM</td>
                             <?php
                         } else { 
                             ?>
-                            <td>NÃO</td>
+                            <td scope="td">NÃO</td>
                             <?php
                         }
 
                         if ($array_attribute['state'] == "active") { // Se  o estado for ativo escreve o que está abaixo 
                             ?>
-                            <td>Activo</td> 
-                            <td>[editar]
+                            <td scope="td">Activo</td> 
+                            <td scope="td">[editar]
                             <br>[desactivar]</td>
                             <?php
                         } else { // Se o estado for inativo escreve o que está abaixo
                             ?>
-                            <td>Inactivo</td>
-                            <td>[editar]<br>[activar]</td>
+                            <td scope="td">Inactivo</td>
+                            <td scope="td">[editar]<br>[activar]</td>
                             <?php
                         }
                         ?>
@@ -189,19 +195,19 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     <table class="mytable2"> <!--CSS diminuir tabela-->
                         <thead>
                         <tr> <!-- Tabela -->
-                            <th scope="col">Objeto</th>
-                            <th scope="col">Id</th>
-                            <th scope="col">Atributo</th>
-                            <th scope="col">Tipo de Valor</th>
-                            <th scope="col">Nome do Campo no Formulário</th>
-                            <th scope="col">Tipo do Campo no Formulário</th>
-                            <th scope="col">Tipo de Unidade</th>
-                            <th scope="col">Ordem do Campo no Formulário</th>
-                            <th scope="col">Tamanho do Campo no Formulário</th>
-                            <th scope="col">Obrigatório</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Escolher</th>
-                            <th scope="col">Ordem</th>
+                            <th scope="coluna">Objeto</th>
+                            <th scope="coluna">Id</th>
+                            <th scope="coluna">Atributo</th>
+                            <th scope="coluna">Tipo de Valor</th>
+                            <th scope="coluna">Nome do Campo no Formulário</th>
+                            <th scope="coluna">Tipo do Campo no Formulário</th>
+                            <th scope="coluna">Tipo de Unidade</th>
+                            <th scope="coluna">Ordem do Campo no Formulário</th>
+                            <th scope="coluna">Tamanho do Campo no Formulário</th>
+                            <th scope="coluna">Obrigatório</th>
+                            <th scope="coluna">Estado</th>
+                            <th scope="coluna">Escolher</th>
+                            <th scope="coluna">Ordem</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -209,34 +215,41 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         $query_objeto = "SELECT * FROM object"; // Query para obter todos os tuplos da tabela object
                         $resultado_objeto = executa_query($query_objeto); // Execução da query($query_objeto)
 
-                        foreach ($resultado_objeto AS $obj) { // Estrutura para percorrer os elementos de um array, para cada iteração o valor do elemento atual da Array é atribuído ao valor $obj. 
-                            
+                        foreach ($resultado_objeto AS $objeto) { 
+                        // Estrutura para percorrer os elementos de um array, 
+                        //para cada iteração o valor do elemento atual do Array é atribuído ao valor $objeto.   
+
                             // Seleciona todos os atributos da tabela attribute se ids forem iguais
                             $query_atributo = "SELECT attribute.* 
                                                FROM attribute,object
                                                WHERE object.id = attribute.obj_id 
-                                               AND object.id = '{$obj['id']}'";
+                                               AND object.id = '{$objeto['id']}'";
                             
-                            $resultado_atributo = executa_query($query_atributo); // Execução da query($query_atributo)
+                            $resultado_atributo = executa_query($query_atributo); 
+                            // Execução da query($query_atributo)
 
-                           
-                            $num_rows = mysqli_num_rows($resultado_atributo); // Saber/Contar o número de linhas do $resultado_atributo
+                            $num_rows = mysqli_num_rows($resultado_atributo); 
+                            // Saber/Contar o número de linhas do $resultado_atributo
 
                             if ($num_rows > 0) { // Se num_rows maior que zero
                                 ?>
                                 <tr> <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
                                 <td scope= "row" class="nome" colspan="1" rowspan="<?php echo $num_rows; ?>">
-                                    <?php echo $obj['name']; ?>
+                                    <?php echo $objeto['name']; ?>
                                 </td>
                                 <?php
-                                foreach ($resultado_atributo as $atributo) {// Estrutura para percorrer os elementos de um array, para cada iteração o valor do elemento atual da Array é atribuído ao valor $atributo. 
+                                foreach ($resultado_atributo as $atributo) {
+                                    // Estrutura para percorrer os elementos de um array, 
+                                    //para cada iteração o valor do elemento atual da Array é atribuído ao valor $atributo. 
+                                    
+                                    
                                     // Tabela que contém os valores dos atributos
                                     ?>
-                                    <td><?php echo $atributo['id'];?></td>
-                                    <td><?php echo $atributo['name'];?></td>
-                                    <td><?php echo $atributo['value_type'];?></td>
-                                    <td><?php echo $atributo['form_field_name'];?></td>
-                                    <td><?php echo $atributo['form_field_type'];?></td>
+                                    <td scope="td"><?php echo $atributo['id'];?></td>
+                                    <td scope="td"><?php echo $atributo['name'];?></td>
+                                    <td scope="td"><?php echo $atributo['value_type'];?></td>
+                                    <td scope="td"><?php echo $atributo['form_field_name'];?></td>
+                                    <td scope="td"><?php echo $atributo['form_field_type'];?></td>
                                     <?php
 
                                     // Query para termos o nome das unidades, comparando os ids
@@ -251,51 +264,51 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
                                     if ($atributo['unit_type_id'] != NULL) {
                                         ?>
-                                        <td><?php echo $unidade['name'];?></td>
+                                        <td scope="td"><?php echo $unidade['name'];?></td>
                                         <?php
                                     } else {
                                         ?>
-                                        <td>-</td>
+                                        <td scope="td">-</td>
                                         <?php
                                     }
                                     ?>
-                                    <td>
+                                    <td scope="td">
                                         <!--Não há verificações logo não preciso do if-->
                                         <?php echo $atributo['form_field_order']; ?> 
                                     </td>
                                     <?php
                                     if ($atributo['form_field_size'] != null) {
                                         ?>
-                                        <td>
+                                        <td scope="td">
                                             <?php echo $atributo['form_field_size']; ?>
                                         </td>
                                         <?php
                                     } else {
                                         ?>
-                                        <td>-</td>
+                                        <td scope="td">-</td>
                                         <?php
                                     }
 
                                     if ($atributo['mandatory'] == 1) {
                                         ?>
-                                        <td>SIM</td>
+                                        <td scope="td">SIM</td>
                                         <?php
                                     } else {
                                         ?>
-                                        <td>NÃO</td>
+                                        <td scope="td">NÃO</td>
                                         <?php
                                     }
                                     if ($atributo['state'] == "active") {
                                         ?>
-                                        <td>Activo</td>
+                                        <td scope="td">Activo</td>
                                         <?php
                                     } else {
                                         ?>
-                                        <td>Inactivo</td>
+                                        <td scope="td">Inactivo</td>
                                         <?php
                                     }
                                     ?>
-                                    <td>
+                                    <td scope="td">
                                                   <!-- Faz a analise de todos os campos com [] -->
                                         <input  type="checkbox" name="check[]" value="<?php echo $atributo['id']; ?>">
                                     </td>
@@ -348,7 +361,9 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             
             $custom_form_id = mysqli_insert_id($liga); // ID do novo formulário(último inserido)
 
-            foreach($check as $chave => $valor)  // Percorre o array $check sendo $chave o indice do array e $valor os dados desse indice
+            foreach($check as $valor)  
+            // Estrutura para percorrer os elementos de um array, 
+            //para cada iteração o valor do elemento atual do Array é atribuído ao $valor.
             {
 
                 $ordem_v = $_REQUEST['order_'.$valor]; // Recebe a ordem como input
@@ -425,19 +440,19 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     <table class="mytable">
                         <thead>
                         <tr>
-                            <th scope="col">Objeto</th>
-                            <th scope="col">ID</th>
-                            <th scope="col">Atributo</th>
-                            <th scope="col">Tipo de Valor</th>
-                            <th scope="col">Nome do Campo no Formulário</th>
-                            <th scope="col">Tipo do Campo no Formulário</th>
-                            <th scope="col">Tipo de Unidade</th>
-                            <th scope="col">Ordem do Campo no Formulário</th>
-                            <th scope="col">Tamanho do Campo no Formulário</th>
-                            <th scope="col">Obrigatorio</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Escolher</th>
-                            <th scope="col">Ordem</th>
+                            <th scope="coluna">Objeto</th>
+                            <th scope="coluna">ID</th>
+                            <th scope="coluna">Atributo</th>
+                            <th scope="coluna">Tipo de Valor</th>
+                            <th scope="coluna">Nome do Campo no Formulário</th>
+                            <th scope="coluna">Tipo do Campo no Formulário</th>
+                            <th scope="coluna">Tipo de Unidade</th>
+                            <th scope="coluna">Ordem do Campo no Formulário</th>
+                            <th scope="coluna">Tamanho do Campo no Formulário</th>
+                            <th scope="coluna">Obrigatorio</th>
+                            <th scope="coluna">Estado</th>
+                            <th scope="coluna">Escolher</th>
+                            <th scope="coluna">Ordem</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -450,7 +465,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         // Execução da query acima
                         $resultado_objeto = executa_query($query_objeto );
 
-                        // Ciclo para percorrer linha a linha //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
+                        // Ciclo para percorrer linha a linha 
+                        // O msqli_fect_assoc busca uma linha de resultado como um array associativo
                         while ($array_objeto = mysqli_fetch_assoc($resultado_objeto)) {
                             
                             // Query para selecionar todos os atributos da tabela attribute
@@ -474,7 +490,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                            
 
                             <?php
-                            // Ciclo para percorrer linha a linha //  O msqli_fect_assoc busca uma linha de resultado como um array associativo
+                            // Ciclo para percorrer linha a linha 
+                            // O msqli_fect_assoc busca uma linha de resultado como um array associativo
                             while ($array_atributo = mysqli_fetch_assoc($resultado_atributo)) {
                                 ?>
                                 <td> <?php echo $array_atributo['id']; ?> </td>
@@ -604,8 +621,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
         // Faço verificação para ver se tem caracteres especiais
         $nome_formulario = guarda_variavel($_REQUEST['form_name']);
 
-        //array "check[]" ALTERAR
-        $select = $_REQUEST['check'];
+        // O request serve para a cada iteração colocar no $select o valor que está no check
+        $verifica_check = $_REQUEST['check'];
 
         // Se nome do formuario for empty, dá mensagem de erro
         if (empty($nome_formulario)) {
@@ -613,7 +630,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             <p id="alerta">Tem de escolher o nome do formulário.</p>
             <?php
             back();
-        } elseif (is_null($select)) { // Se o select for null, dá mensagem de erro
+        } elseif (is_null($verifica_check)) { // Se o select for null, dá mensagem de erro
             ?>
             <p id="alerta">Tem de escolher pelo menos um atributo.</p>
             <?php
@@ -626,14 +643,14 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             // Execução da query acima na BD
             $resultado_update_nome = executa_query($novo_nome);
 
-            //DELETE - para retirar o valor antigo, que agora foi atualizado ALTERAR
+            //DELETE - para retirar o valor antigo, que foi atualizado ALTERAR
             $elimina_custom_form_has_attribute = "DELETE FROM `custom_form_has_attribute` WHERE `custom_form_id` = '$custom_form_id'";
 
             $resultado_eliminar = executa_query($elimina_custom_form_has_attribute);
 
             // Foreach serve para percorrer o array pelo indice, onde $select é o array e $index é o indice do mesmo
             // e $id_checks os dados associados ao indice
-            foreach ($select as $id_checks) {
+            foreach ($verifica_check as $id_checks) {
                 $ordem = $_REQUEST['order_' . $id_checks];
 
                 // Se ordem for emptyo então o valor da ordem fica null na BD 
