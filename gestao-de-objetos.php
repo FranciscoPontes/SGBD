@@ -6,7 +6,7 @@ require_once("custom/php/common.php");
 // verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
 if (is_user_logged_in() && current_user_can('manage_objects')) {        
 $liga =liga_basedados();
- 
+
 // quando o estado da execução não está definido
 if ($_REQUEST["estado_execucao"] == "") {    
  
@@ -164,7 +164,7 @@ if ($_REQUEST["estado_execucao"] == "") {
         $result_insert = executa_query($query_inserir);
 
         if ($result_insert) {
-        mysqli_query($liga,'COMMIT');
+        // mysqli_query($liga,'COMMIT');
         echo"<p>Inserção de dados feita com sucesso!
         Clique  em <a href='gestao-de-objetos'>continuar</a> para avançar.
         <br/>";

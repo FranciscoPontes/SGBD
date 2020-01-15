@@ -160,7 +160,6 @@ if ($_REQUEST["estado"] == "") {
             $result_insere = executa_query($query_insere);
  
             if ($result_insere) {
-                mysqli_query($liga,'COMMIT');
                 echo"<p>Inserção de dados feita com sucesso!
                 Clique  em <a href='gestao-de-valores-permitidos'>continuar</a> para avançar.";
             }       
