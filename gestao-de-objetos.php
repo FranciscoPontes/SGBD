@@ -20,13 +20,13 @@ if ($_REQUEST["estado_execucao"] == "") {
         if (mysqli_num_rows($result_object) == 0) {    
             echo "Não há objetos ";        
         } else {
-            echo"<table>
+            echo"<table class='mytable2'>
                 <tr>
-                    <th>tipo de objeto</th>
-                    <th>id</th>
-                    <th>nome do objeto</th>
-                    <th>estado</th>
-                    <th>ação</th>
+                    <th scope='coluna'>tipo de objeto</th>
+                    <th scope='coluna'>id</th>
+                    <th scope='coluna'>nome do objeto</th>
+                    <th scope='coluna'>estado</th>
+                    <th scope='coluna'>ação</th>
                 </tr>";
             
             // código SQL em formato string para obter id e nome da tabela obj_type, ordenados pelo nome
@@ -53,7 +53,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                     //colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
                      //   e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)
                     echo"<tr>
-                        <td colspan='1' rowspan='$lines_objeto'>
+                        <td scope= 'row' colspan='1' rowspan='$lines_objeto'>
                             ".$array_tipos_objeto["name"]."
                         </td>";   
 
@@ -116,7 +116,9 @@ if ($_REQUEST["estado_execucao"] == "") {
         </p>
             <br>
             <input type= 'hidden' name= 'estado_execucao' value= 'inserir'>
+            <p id='botao'>
             <input class= 'button' type= 'submit' value= 'Inserir objeto'>
+            </p>
             <br><br>
         </form>";
     }

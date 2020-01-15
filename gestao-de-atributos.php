@@ -237,9 +237,10 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             </p>
 
             <br>
+            <p id="botao">
              <input type= "hidden" name= "estado_execucao" value= "inserir">
              <input class= "button" type= "submit" value= "Inserir objeto">
-             <br><br>
+             <br><br></p>
         </form>
     <?php
     } elseif ($_REQUEST["estado_execucao"] == "inserir") {              

@@ -16,15 +16,15 @@ if ($_REQUEST["estado"] == "") {
         echo 'Não há atributos especificados cujo tipo de valor seja enum. Especificar primeiro novo(s) atributo(s) e depois voltar a esta opção.';
     }
     else{
-        echo"<table>
+        echo"<table class='mytable2'>
             <tr>
-                <th>objeto</th>
-                <th>id</th>
-                <th>atributo</th>
-                <th>id</th>
-                <th>valores permitidos</th>
-                <th>estado</th>
-                <th>ação</th>
+                <th scope='coluna'>objeto</th>
+                <th scope='coluna'>id</th>
+                <th scope='coluna'>atributo</th>
+                <th scope='coluna'>id</th>
+                <th scope='coluna'>valores permitidos</th>
+                <th scope='coluna'>estado</th>
+                <th scope='coluna'>ação</th>
             </tr>";
             
             // código SQL em formato string para obter o nome do objeto,nome do atributo e id, atributos do tipo enum
@@ -58,7 +58,7 @@ if ($_REQUEST["estado"] == "") {
                 echo"<tr>";    
                     //colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
                             //e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)
-                    echo"<td colspan='1' rowspan='$size_rowspan'>
+                    echo"<td scope= 'row' colspan='1' rowspan='$size_rowspan'>
                         ".$array_objeto["name"]."
                     </td>";
                 $var=1;
