@@ -26,8 +26,8 @@ if ($_REQUEST["estado_execucao"] == "") {
             <thead>
                 <tr>
                 <!-- Parametros da tabela -->
-                    <th>Id</th> 
-                    <th>Name</th>  
+                    <th scope="col">Id</th> 
+                    <th scope="col">Name</th>  
                 </tr>
 
             </thead>
@@ -54,12 +54,13 @@ if ($_REQUEST["estado_execucao"] == "") {
             <h3>Gestão de unidades - Introdução</h3>
 
             <form class="form-inline" method="POST" name="gestao_unidades">
-                <label for="name">Nome:</label>
-                <input type="text" name="name" placeholder="Insira a unidade">
+                <label  id=" nomes" for="name">Nome:</label>
+                <input id="castanhas" type="text" name="name" placeholder="Insira a unidade">
 
                 <input type="hidden" name="estado_execucao" value="inserir"> <!--altera o estado de execução no if abaixo-->
                         <!--Botão Submit-->
-                <button type="submit" name="insere_unidade">Submit</button>
+                
+                <button   id= "botaounid" type="submit" name="insere_unidade">Submit</button>
             </form>
         <?php
         } else {
@@ -76,7 +77,7 @@ if ($_REQUEST["estado_execucao"] == "") {
                     // Caso o valor em $unidade seja vazio, não avança e dá a mensagem Insira o nome de uma unidade
                     if (empty($unidade)) {
                         ?>
-                        <p>Insira o nome de uma unidade</p>
+                        <p id="alerta">Insira o nome de uma unidade!</p>
                         <?php
                         back(); // Faz voltar atrás
                     } else {
@@ -87,8 +88,8 @@ if ($_REQUEST["estado_execucao"] == "") {
                         $result_insert_unit_type = executa_query($query_insert_unit_type);
 
                         ?>
-                        <p>Inseriu os dados de novo tipo de unidade com sucesso.</p>
-                        <p>
+                        <p id="feito">Inseriu os dados de novo tipo de unidade com sucesso.</p>
+                        <p id="feito">
                             Clique em <a href="gestao-de-unidades"><strong>Continuar</strong></a> para avançar
                         </p>
                         <?php
