@@ -115,14 +115,14 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                             switch($array_resultado_attribute['form_field_type'])
                             {
                                 case "text":
-                                    ?><p>Text</p>
-                                    <input type="text" name=<?php echo $array_resultado_attribute['id']; ?> autocomplete="off">
+                                    ?>
+                                    <input type="text" name=<?php echo $array_resultado_attribute['id']; ?>>
                                         <?php echo $array_resultado_attribute['unit']; ?> <br><br> <?php
                                 break;
 
                                 case "textbox":
-                                    ?><p>Textbox</p>
-                                    <input type="textbox" name=<?php echo $array_resultado_attribute['id']; ?> autocomplete="off">
+                                    ?>
+                                    <input type="textbox" name=<?php echo $array_resultado_attribute['id']; ?>>
                                         <?php echo $array_resultado_attribute['unit']; ?> <br><br><?php
                                 break;
 
@@ -134,103 +134,86 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                             }
                             break;
 
-                            //Caso o atributo seja do tipo 'bool'
                         case "bool":
                             ?>
-                            <input type="radio" name=<?php echo $array_resultado_attribute["id"]; ?> autocomplete="off" >
-                                <?php echo "{$array_resultado_attribute["name"]} {$array_resultado_attribute["unit"]}"; ?><br><br>
-                            
+                            <input type="radio" name=<?php echo $array_resultado_attribute["id"]; ?>>
+                                <?php echo "{$array_resultado_attribute["name"]}"; ?><br><br>
                             <?php
                         break;
 
-                        // Caso o atributo seja do tipo 'Int' ou 'Double'
                         case "int":
                         case "double":
                             echo "{$array_resultado_attribute["name"]}";
                             ?>
-                            <input type="text" name=<?php echo $array_resultado_attribute["id"]; ?> autocomplete="off">
-                                <?php echo $array_resultado_attribute["unit"]; ?>
+                            <input type="text" name=<?php echo $array_resultado_attribute["id"]; ?>>
+                                <?php echo $array_resultado_attribute["unit"]; ?><br><br>
                             
                             <?php
                         break;
 
-                        //Caso o atributo seja do tipo 'enum': várias opções - preciso adquirir primeiro
                         case "enum":
-                            //String com query para adquirir odas as opções disponíveis para o "ENUM" em questão.
-                            //
                             $opcoes = "SELECT attr_allowed_value.id,
                                               attr_allowed_value.value
                                         FROM attribute,
                                              attr_allowed_value 
                                           WHERE attr_allowed_value.attribute_id = attribute.id
-                                            AND attr_allowed_value.attribute_id ='{$array_resultado_attribute["id"]}'"; //atributo clickado
-                            //execução
+                                            AND attr_allowed_value.attribute_id ='{$array_resultado_attribute["id"]}'"; 
+                            
                             $query_opc = executa_query($opcoes);
 
-                            //Busca o número de opções - conta rows (linhas)
                             $nr_opcoes = mysqli_num_rows($query_opc);
 
-                            //Mostra o nome do atributo //label
-                            echo "{$array_resultado_attribute["name"]}.':'";
+                            echo "{$array_resultado_attribute["name"]}':'";
 
-                            //switch para os ti
                             switch($array_resultado_attribute["form_field_type"])
                             {
-                                //Para o caso do campo de seleção seja do tipo 'radio button'
                                 case "radio":
-                                    //Percorre todas as opções
                                     for($j=0; $j<$nr_opcoes; $j++)
                                     {
-                                        //*Fetch a result row as an associative array*
                                         $opcao_atual = mysqli_fetch_assoc($query_opc);
                                         ?>
                                         <input type="radio"
-                                               name=<?php echo $array_resultado_attribute["id"]; ?> autocomplete="off"
+                                               name=<?php echo $array_resultado_attribute["id"]; ?>
                                                value="<?php echo $opcao_atual["value"]; ?>">
                                             <?php echo "{$opcao_atual["value"]} {$array_resultado_attribute["unit"]}"; ?>
+                                            <br><br>
                                         
                                     <?php
                                     }
                                     ?>
                                     <?php
                                     break;
-                                //Para o caso do campo de seleção seja do tipo 'checkbox'
+
                                 case "checkbox":
-                                    //Percorre todas as opções
                                     for($j = 0; $j < $nr_opcoes; $j++)
                                     {
-                                        //*Fetch a result row as an associative array*
                                         $opcao_atual = mysqli_fetch_assoc($query_opc);
                                         ?>
                                         <input type="checkbox"
-                                               name=<?php echo $array_resultado_attribute["id"]; ?> autocomplete="off"
+                                               name=<?php echo $array_resultado_attribute["id"]; ?>
                                                value="<?php echo $opcao_atual["value"]; ?>" >
-                                            <?php echo "{$opcao_atual["value"]} {$array_resultado_attribute["unit"]}"; ?> <?php
+                                            <?php echo "{$opcao_atual["value"]}"; ?><br><br> <?php
                                     }
                                     break;
 
-                                //Para o caso do campo de seleção seja do tipo 'selectbox'
                                 case "selectbox":
-                                    // Percorre todas as opções
                                     ?>
                                     <select name=<?php echo $array_resultado_attribute["id"]; ?> > <?php
                                         for($j = 0; $j < $nr_opcoes; $j++)
                                         {
-                                            //*Fetch a result row as an associative array*
                                             $opcao_atual = mysqli_fetch_assoc($query_opc);
                                         ?>
                                             <option value="<?php echo $opcao_atual["value"]; ?>" >
-                                                <?php echo "{$opcao_atual["value"]} {$array_resultado_attribute["unit"]}"; ?>
+                                                <?php echo "{$array_resultado_attribute["unit"]}"; ?>
                                         
                                     <?php
                                         }
                                     ?>
-                                    </select>
+                                    </select><br><br>
                                     
                                     <?php
                                     break;
 
-                                //Caso não seja nenhuma das opções anteriores
                                 default:
                                     ?>
                                     <div class="alert">
@@ -242,25 +225,19 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                             }
                             break;
 
-                        //Caso o atributo seja do tipo 'obj_ref': referência a um objecto
                         case "obj_ref":
-                            //Busca todas as opções de instâncias
                             $opcoes = "SELECT obj_inst.id AS obj_inst_id, 
                                                   obj_inst.object_name
                                             FROM attribute,
                                                  obj_inst
                                               WHERE attribute.obj_fk_id = obj_inst.object_id
                                                 AND attribute.obj_id = '{$_SESSION["obj_id"]}'";
-                            //execução
                             $query_opc = executa_query($opcoes);
 
-                            //Busca o número de opções
                             $nr_opcoes = mysqli_num_rows($query_opc);
 
-                            //Mostra o nome da attributos
                             echo "{$array_resultado_attribute["name"]}";
 
-                            //Mostra todas as opções numa 'selectbox'
                             ?>
                             <select name=<?php echo $array_resultado_attribute["id"];?>>
                             <?php
@@ -273,11 +250,10 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                             <?php
                                 }
                             ?>
-                            </select>
+                            </select><br><br>
                             
                             <?php
                             break;
-                        //Caso contrário
                         default:
                             ?>
                             <div class="alert">
@@ -295,13 +271,13 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
         echo '<a href="insercao-de-valores?estado=validar&obj=' . $_SESSION["obj_id"] . '">Validar</a>';
     } elseif ($_REQUEST["estado"] == "validar") {
         ?> 
-        <h3>Inserção de valores - <?php echo $_SESSION["obj_name"];?> - Validar</h3>
+        <h3>Inserção de valores - <?php echo $REQUEST["obj_name"];?> - Validar</h3>
         <p>Estamos prestes a inserir os dados abaixo na base de dados. 
         Confirma que os dados estão correctos e pretende submeter os mesmos?</p>
         <?php echo '<a href="insercao-de-valores?estado=inserir&obj=' . $_SESSION["obj_id"] . '">Submeter</a>';
     } elseif ($_REQUEST["estado"] == "inserir") {
         ?> 
-        <h3>Inserção de valores - <?php echo $_SESSION["obj_name"];?> - Inserção</h3>
+        <h3>Inserção de valores - <?php echo $REQUEST["obj_name"];?> - Inserção</h3>
         <p>Inseriu o(s) valor(es) com sucesso.</p>
         <p>Clique em <a href="insercao-de-valores">Voltar</a> para voltar ao início da inserção de valores e poder escolher outro objeto 
         ou em <?php echo '<a href="insercao-de-valores?estado=introducao&obj=' . $_SESSION["obj_id"] . '">Continuar a inserir valores neste objeto</a>';?> se quiser continuar a inserir valores</p> 
