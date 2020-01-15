@@ -35,19 +35,19 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
             <!-- Criação da tabela -->
             <table class="mytable">
-                <tr>
-                    <th>Nome do Formulário</th>
-                    <th>Id</th>
-                    <th>Atributo</th>
-                    <th>Tipo de Valor</th>
-                    <th>Nome do Campo no Formulário</th>
-                    <th>Tipo do Campo no Formulário</th>
-                    <th>Tipo de Unidade</th>
-                    <th>Ordem do Campo no Formulário</th>
-                    <th>Tamanho do Campo no Formulário</th>
-                    <th>Obrigatório</th>
-                    <th>Estado</th>
-                    <th>Acção</th>
+                <tr> 
+                    <th scope="col"> Nome do Formulário</th>
+                    <th scope="col"> Id</th>
+                    <th scope="col">Atributo</th>
+                    <th scope="col">Tipo de Valor</th>
+                    <th scope="col">Nome do Campo no Formulário</th>
+                    <th scope="col">Tipo do Campo no Formulário</th>
+                    <th scope="col">Tipo de Unidade</th>
+                    <th scope="col">Ordem do Campo no Formulário</th>
+                    <th scope="col">Tamanho do Campo no Formulário</th>
+                    <th scope="col">Obrigatório</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acção</th>
                 </tr>
 
                 <?php
@@ -68,7 +68,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     ?>
                     <tbody>
                     <tr> <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
-                        <td colspan="1" rowspan="<?php echo $num_rows_attribute; ?>"> <!-- Passa ao  rowspan o valor do $num_rows_attribute visto acima -->
+                        <td scope= "row" colspan="1" rowspan="<?php echo $num_rows_attribute; ?>"> <!-- Passa ao  rowspan o valor do $num_rows_attribute visto acima -->
 
                             <!-- Após  o nome gestao-de-formularios-custmizados são passados o estado= editar_form e é passado o id enquanto que o name é colocado na tabela-->
                             <?php 
@@ -117,8 +117,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         // NOVA QUERY // query para a inserção da ordem
                         $ordem= "SELECT field_order
                         From custom_form_has_attribute, custom_form
-                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}'
-                       and  custom_form_has_attribute.custom_form_id= custom_form.id";
+                        where custom_form_has_attribute.attribute_id='{$array_attribute['id']}' 
+                        and  custom_form_has_attribute.custom_form_id= '{$array_formularios_customizados["id"]}'";
                        
                 
                         $resultado_ordem=executa_query($ordem); // Executa a query acima
@@ -180,28 +180,28 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                     <!-- Inserção de um novo formulário-->
         <form name="registo_formulario" class="form-inline" method="POST">
                 <p>
-                    <legend>Insira um nome para o formulário:</legend>
+                    <legend class="name"> Insira um nome para o formulário:</legend>
                 </p>
-                <p>
-                    <input type="text" name="form_name" placeholder="Nome:">
+                <p id="amendoin">
+                    <input  type="text" name="form_name" placeholder="Nome:">
                 </p>
                 <br>
                     <table class="mytable2"> <!--CSS diminuir tabela-->
                         <thead>
                         <tr> <!-- Tabela -->
-                            <th>Objeto</th>
-                            <th>Id</th>
-                            <th>Atributo</th>
-                            <th>Tipo de Valor</th>
-                            <th>Nome do Campo no Formulário</th>
-                            <th>Tipo do Campo no Formulário</th>
-                            <th>Tipo de Unidade</th>
-                            <th>Ordem do Campo no Formulário</th>
-                            <th>Tamanho do Campo no Formulário</th>
-                            <th>Obrigatório</th>
-                            <th>Estado</th>
-                            <th>Escolher</th>
-                            <th>Ordem</th>
+                            <th scope="col">Objeto</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Atributo</th>
+                            <th scope="col">Tipo de Valor</th>
+                            <th scope="col">Nome do Campo no Formulário</th>
+                            <th scope="col">Tipo do Campo no Formulário</th>
+                            <th scope="col">Tipo de Unidade</th>
+                            <th scope="col">Ordem do Campo no Formulário</th>
+                            <th scope="col">Tamanho do Campo no Formulário</th>
+                            <th scope="col">Obrigatório</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Escolher</th>
+                            <th scope="col">Ordem</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -225,7 +225,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             if ($num_rows > 0) { // Se num_rows maior que zero
                                 ?>
                                 <tr> <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
-                                <td class="nome" colspan="1" rowspan="<?php echo $num_rows; ?>">
+                                <td scope= "row" class="nome" colspan="1" rowspan="<?php echo $num_rows; ?>">
                                     <?php echo $obj['name']; ?>
                                 </td>
                                 <?php
@@ -297,10 +297,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                     ?>
                                     <td>
                                                   <!-- Faz a analise de todos os campos com [] -->
-                                        <input type="checkbox" name="check[]" value="<?php echo $atributo['id']; ?>">
+                                        <input  type="checkbox" name="check[]" value="<?php echo $atributo['id']; ?>">
                                     </td>
                                     <td>
-                                        <input type="number" name="order_<?php echo $atributo['id']; ?>">
+                                        <input  scope="textbox" type="number" name="order_<?php echo $atributo['id']; ?>">
                                     </td>
                                     </tr>
                                     <?php
@@ -310,10 +310,10 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         ?>
                         </tbody>
                     </table>
-                                
+                  <p id="botao">              
                 <input type="hidden" name="estado_execucao" value="inserir"><!-- Botão para o estado inserir-->
                 <input class="button" type="submit" value="Criar Formulário">
-                
+                    </p>
         </form>
         <?php // Estado Fechado
         
@@ -328,14 +328,14 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
         if(empty($nome_formulario)) // Se nome formulario for vazio da erro
         {
             ?>
-            <p>Tem de escolher um nome para o formulário.</p>
+            <p id="alerta" >Tem de escolher um nome para o formulário!</p>
             <?php
             back();
         }
         elseif(is_null($check)) // Se não tiver nenhum campo check da erro
         {
             ?>
-            <p>Tem de escolher pelo menos um atributo.</p>
+            <p id="alerta" >Tem de escolher pelo menos um atributo!</p>
             <?php
             back();
         }
@@ -385,8 +385,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             if($resultado_inserir_nome && $resultado_ins_custom_form_has_attr) // Se os dois se confirmarem, inserção feita com sucesso
             {
                 ?>
-                <p>Inseriu os dados para o novo formulário com sucesso.</p>
-                <p>Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.</p><br>
+                <p id="feito">Inseriu os dados para o novo formulário com sucesso.</p>
+                <p id="feito">Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.</p><br>
                 <?php
                 
             }
@@ -417,27 +417,27 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
             <form name="gestao-de-formularios-editar" method="POST">
                 
                     <input type="hidden" name="estado_execucao" value="atualizar_formulario">
-                    <p>
+                    <p id="amendoas">
                         <label><b>Nome do Formulário:</b></label>
-                        <input type="text" name="form_name" value="<?php echo $array_nome_formulario['name']; ?>">
+                        <input  type="text" name="form_name" value="<?php echo $array_nome_formulario['name']; ?>">
                     </p>
 
                     <table class="mytable">
                         <thead>
                         <tr>
-                            <th>Objeto</th>
-                            <th>ID</th>
-                            <th>Atributo</th>
-                            <th>Tipo de Valor</th>
-                            <th>Nome do Campo no Formulário</th>
-                            <th>Tipo do Campo no Formulário</th>
-                            <th>Tipo de Unidade</th>
-                            <th>Ordem do Campo no Formulário</th>
-                            <th>Tamanho do Campo no Formulário</th>
-                            <th>Obrigatorio</th>
-                            <th>Estado</th>
-                            <th>Escolher</th>
-                            <th>Ordem</th>
+                            <th scope="col">Objeto</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Atributo</th>
+                            <th scope="col">Tipo de Valor</th>
+                            <th scope="col">Nome do Campo no Formulário</th>
+                            <th scope="col">Tipo do Campo no Formulário</th>
+                            <th scope="col">Tipo de Unidade</th>
+                            <th scope="col">Ordem do Campo no Formulário</th>
+                            <th scope="col">Tamanho do Campo no Formulário</th>
+                            <th scope="col">Obrigatorio</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Escolher</th>
+                            <th scope="col">Ordem</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -468,7 +468,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                             ?>
                             <tr>
                             <!-- colspan é o nr de colunas que uma parcela vai conter , rowspan = nr de linhas que uma celula vai ter-->
-                            <td colspan="1" rowspan="<?php echo $num_rows_atributo;?>">
+                            <td  scope= "row" colspan="1" rowspan="<?php echo $num_rows_atributo;?>">
                                  <?php echo $array_objeto['name']; ?>
                             
                            
@@ -563,7 +563,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                         <input type="checkbox" name="check[]" value="<?php echo $array_atributo['id']; ?>" CHECKED>
                                     </td>
                                     <td>
-                                        <input type="number" name="order_<?php echo $array_atributo['id']; ?>" value="<?php echo $array_form_has_attr['field_order']; ?>">
+                                        <input  scope="textbox" type="number" name="order_<?php echo $array_atributo['id']; ?>" value="<?php echo $array_form_has_attr['field_order']; ?>">
                                     </td>
                                     <?php
                                 } else {
@@ -574,7 +574,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                                         <input type="checkbox" name="check[]" value="<?php echo $array_atributo['id']; ?>">
                                     </td>
                                     <td>
-                                        <input type="number" name="order_<?php echo $array_atributo['id']; ?>">
+                                        <input  scope="textbox" type="number" name="order_<?php echo $array_atributo['id']; ?>">
                                     </td>
                                     <?php
                                     
@@ -588,8 +588,8 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
                         ?>
                         </tbody>
                     </table>
-                    <p>
-                        <input type="submit" value="Atualizar Formulario">
+                    <p id="botao">
+                        <input  type="submit" value="Atualizar Formulario">
                     </p>
             
             </form>  <!--RT-09--> 
@@ -610,12 +610,12 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
         // Se nome do formuario for empty, dá mensagem de erro
         if (empty($nome_formulario)) {
             ?>
-            <p>Tem de escolher o nome do formulário.</p>
+            <p id="alerta">Tem de escolher o nome do formulário.</p>
             <?php
             back();
         } elseif (is_null($select)) { // Se o select for null, dá mensagem de erro
             ?>
-            <p>Tem de escolher pelo menos um atributo.</p>
+            <p id="alerta">Tem de escolher pelo menos um atributo.</p>
             <?php
             back();
         } else {
@@ -633,7 +633,7 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
             // Foreach serve para percorrer o array pelo indice, onde $select é o array e $index é o indice do mesmo
             // e $id_checks os dados associados ao indice
-            foreach ($select as $index => $id_checks) {
+            foreach ($select as $id_checks) {
                 $ordem = $_REQUEST['order_' . $id_checks];
 
                 // Se ordem for emptyo então o valor da ordem fica null na BD 
@@ -659,10 +659,9 @@ if (is_user_logged_in() && current_user_can('manage_custom_forms')) {
 
             // Se os três se confirmarem então a transação foi feita com sucesso
             if ($resultado_update_nome && $resultado_update_custom_form_has_attribute && $resultado_eliminar) {
-                mysqli_query($liga,'COMMIT');
                 ?>
-                Os dados do formulário foram atualizados com sucesso.
-                Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.
+                <p id="feito">Os dados do formulário foram atualizados com sucesso.
+                Clique em <a href="gestao-de-formularios">Continuar</a> para avancar.</p>
                 <?php
             }
         }

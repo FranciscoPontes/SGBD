@@ -2,13 +2,133 @@
     margin: 4px;
 }
 
-.mytable td, .mytable th {
+.mytable td, .mytable th,.mytable2 td, .mytable2 th  {
     margin: 0  !important;
     border: 1px solid !important;
     padding: 1px !important;
     font-size: 11px  !important;
 }
 
-.mytable tr .attr-id {
+
+
+.mytable tr .attr-id, .mytable2 tr .attr-id {
     text-align: center;
 }
+
+h3{
+    border-radius: 5px;
+    width: max-content;
+    border:10px solid blue;
+    margin: 10px ;
+    padding: inherit;
+    text-decoration: underline;
+    /* background-color: rgb(101, 101, 243); */
+    text-align: justify;
+}
+
+
+th[scope="col"]{
+    color: whitesmoke;
+    font-weight: bold;
+    background-color: rgb(84, 84, 240);
+    font-style: italic;
+
+
+}
+
+td[scope="row"]{
+    color: rgb(103, 103, 207);
+    border-color: black;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(51, 51, 105);
+
+}
+
+td{
+    background-color: rgb(155, 164, 247);
+    font-weight: bold;
+    color: black;
+    text-align: center;
+
+}
+
+.name{
+    color:black;
+    font-weight: bold;
+}
+
+.nome{
+    background-color:rgb(83, 83, 238); 
+
+
+}
+
+input[scope="textbox"]{
+    background-color: rgb(120, 118, 226);
+    font-weight: bold;
+
+}
+#amendoin input{
+    background-color:rgb(108, 108, 255);
+    color:whitesmoke;
+    font-weight: bolder;
+    
+}
+
+::placeholder {
+    color: whitesmoke;
+  }
+
+#amendoas input{
+    background-color: rgb(108, 108, 255);
+    color: whitesmoke;
+    font-weight: bolder;
+}  
+
+
+#botao input{
+    background-color: rgb(23, 23, 104);
+}
+
+#botaounid {
+    background-color: rgb(23, 23, 104);
+}
+
+#castanhas {
+    background-color:  rgb(120, 118, 226);
+    color: whitesmoke;
+}
+
+.form-inline label {
+    color:black;
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+
+#alerta{
+    background-color: rgb(255, 255, 1);
+    width: max-content;
+    font-weight: bold;
+    border-radius: 5px;
+    border:2px solid yellowgreen;
+    
+}
+
+#feito{
+    background-color: rgb(147, 147, 223);
+    width: max-content;
+    font-weight: bold;
+    border-radius: 5px;
+    border:1px solid black;
+    
+
+}
+
+
+
+
+
+
+
