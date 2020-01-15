@@ -3,7 +3,6 @@
 require_once("custom/php/common.php");
 // verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
 if (is_user_logged_in() && current_user_can('dynamic_search')) {        
- 
     $liga =liga_basedados();
 
 // quando o estado da execução não está definido
@@ -328,13 +327,15 @@ if (is_user_logged_in() && current_user_can('dynamic_search')) {
         }
 
         $query_pesquisa_final=executa_query($sql_pesquisa_final);
-
-        // o action envia os dados do formulario para o ficheiro com o nome pretendido
-        $tabela="";
-        $tabela.="<table><caption>".$frase_pesquisa."</caption>";
+        
+        // variavel tabela contem toda a tabela em formato string, que depois é feito echo
+        $tabela="<table><caption>".$frase_pesquisa."</caption>";
 
         $atributos_ids=[];
-        while ($array_pesquisa_final=mysqli_fetch_array($query_pesquisa_final)){            
+        while ($array_pesquisa_final=mysqli_fetch_array($query_pesquisa_final)){   
+            
+            // adiciona ao array ids de atributos distintos, que foram selecionados pela pesquisa do utilizador
+            // podiam ser varios com o mesmo id caso o atributo tenha varios valores
             if (!in_array($array_pesquisa_final["attribute_id"],$atributos_ids)){
                 $atributos_ids[]=$array_pesquisa_final["attribute_id"];
             }
@@ -345,9 +346,13 @@ if (is_user_logged_in() && current_user_can('dynamic_search')) {
         $nomes_atributos=[];
         $ids=[];
         foreach ($atributos_ids as $atributos_ids){
+
+            // sql para ir buscar informacao dos atributos que tenham valores permitidos resultantes
+            // na pesquisa
             $sql_atributos="SELECT * FROM attribute WHERE id=".$atributos_ids;
             $query_atributos=executa_query($sql_atributos);
-            
+
+            // para cada atributo escrever o form field name e guarda em arrays name e id  
             while($array_atributos=mysqli_fetch_array($query_atributos)){
                 $tabela.="<th>".$array_atributos["form_field_name"]."</th>";
                 $nomes_atributos[]=$array_atributos["name"];
@@ -358,12 +363,17 @@ if (is_user_logged_in() && current_user_can('dynamic_search')) {
 
         // terceira linha
         $tabela.="<tr>";
+        // escrever nomes dos atributos
         foreach ($nomes_atributos as $nome){
             $tabela.="<td>".$nome."</td>";
         }
         $tabela.="</tr>";
   
         $tabela.="<tr>";
+
+        // para cada id vai escrever os valores permitidos resultantes da pesquisa
+        // garantindo assim que cada atributo fica com os seus valores permitidos na linha abaixo
+        // da tabela
         foreach ($ids as $id){
             $tabela.="<td>";
             $escreve="";
