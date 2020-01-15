@@ -22,18 +22,18 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
             <table class="mytable tabela-attr">
                 <thead>
                     <tr>
-                        <th>objeto</th>
-                        <th>id</th>
-                        <th>nome do atributo</th>
-                        <th>tipo de valor</th>
-                        <th>nome do campo no formulário</th>
-                        <th>tipo do campo no formulário</th>
-                        <th>tipo de unidade</th>
-                        <th>ordem do campo no formulário</th>
-                        <th>tamanho do campo no formulário</th>
-                        <th>obrigatório</th>
-                        <th>estado</th>
-                        <th>ação</th>
+                        <th scope="coluna">objeto</th>
+                        <th scope="coluna">id</th>
+                        <th scope="coluna">nome do atributo</th>
+                        <th scope="coluna">tipo de valor</th>
+                        <th scope="coluna">nome do campo no formulário</th>
+                        <th scope="coluna">tipo do campo no formulário</th>
+                        <th scope="coluna">tipo de unidade</th>
+                        <th scope="coluna">ordem do campo no formulário</th>
+                        <th scope="coluna">tamanho do campo no formulário</th>
+                        <th scope="coluna">obrigatório</th>
+                        <th scope="coluna">estado</th>
+                        <th scope="coluna">ação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +63,7 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
 
                     <!-- Definição número colunas e linhas-->
                     <tr>
-                        <td  colspan="1" rowspan="<?php echo $lines_attributes;?>"><?php echo $array_objeto['name'];?>
+                        <td  scope= "row" colspan="1" rowspan="<?php echo $lines_attributes;?>"><?php echo $array_objeto['name'];?>
                         </td>
 
                     <?php 
@@ -141,12 +141,12 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
         <h3><strong>Gestão de Atributos - <span>Introdução</span></strong></h3>
              <!-- Criação do formulário de inserção de atributos-->
          <form name="gestao_de_atributos"  method="post">
-            <p>
-                <label><b>Nome do atributo:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Nome do atributo:</b></label>
                 <input type="text" name="nome_do_atributo">
             </p>
-            <p>
-                <label><b>Tipo de valor:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Tipo de valor:</b></label>
                 <?php
                 $query_tipos_valor = "SELECT distinct value_type from attribute";
                 // Executa a query e guarda o retorno na variavel
@@ -159,8 +159,8 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                 }
                 ?>
             </p>
-            <p>
-                <label><b>Objeto a que irá pertencer este atributo:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Objeto a que irá pertencer este atributo:</b></label>
                 <?php
                 $query_objetos = "SELECT distinct name, id from object";
                 // Executa a query e guarda o retorno na variavel
@@ -175,8 +175,8 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                 }
                 ?></select>
             </p>
-            <p>
-                <label><b>Tipo do campo do formulário:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Tipo do campo do formulário:</b></label>
                 <?php
                 $query_nome_formulario = "SELECT distinct form_field_type from attribute";
                 // Executa a query e guarda o retorno na variavel
@@ -189,8 +189,8 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                 }
                 ?>
             </p>
-            <p>
-                <label><b>Tipo de unidade:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Tipo de unidade:</b></label>
                 <?php
                 $query_unidades = "SELECT distinct name, id from attr_unit_type";
                 // Executa a query e guarda o retorno na variavel
@@ -206,21 +206,21 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                 }
                 ?></select>
             </p>
-            <p>
-                <label><b>Ordem do campo no formulário:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Ordem do campo no formulário:</b></label>
                 <input type="text" name="ordem_formulario">
             </p>
-            <p>
-                <label><b>Tamanho do campo no formulário:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Tamanho do campo no formulário:</b></label>
                 <input type="text" name="tamanho_formulario">
             </p>
-            <p>
-                <label><b>Obrigatorio:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Obrigatorio:</b></label>
                     <input type="radio" name="obrigatorio" value="sim"> <?php echo "Sim";?>
                     <input type="radio" name="obrigatorio" value="nao"> <?php echo "Não";?>
             </p>
-            <p>
-                <label><b>Objeto referenciado por este atributo:</b></label>
+            <p id="amendoas">
+                <label class="name"><b>Objeto referenciado por este atributo:</b></label>
                 <?php
                 $query_objetos = "SELECT distinct name, id from object";
                 // Executa a query e guarda o retorno na variavel
@@ -324,6 +324,8 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
                 $string = $auxiliar.'-N-'.$string_aux;
                 
                 $ultimo_id = mysqli_insert_id($liga);
+                $ultimo_id_v=guarda_variavel($ultimo_id); //AQUI
+
                 echo $ultimo_id;
                 $update_dados = "UPDATE `attribute` 
                 SET `form_field_name` = '".$auxiliar."-".$ultimo_id."-".$string_aux ."'
