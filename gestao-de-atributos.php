@@ -253,78 +253,90 @@ if (is_user_logged_in() && current_user_can('manage_attributes')) {
         $object_tipo_de_valor = guarda_variavel($_REQUEST['tipo_de_valor']);
         $object_objeto = guarda_variavel($_REQUEST['objeto']);
         $object_tipo_formulario = guarda_variavel($_REQUEST['nome_formulario']);
-            $object_unidade = guarda_variavel($_REQUEST['unidade']);
+        $object_unidade = guarda_variavel($_REQUEST['unidade']);
         $object_ordem_formulario = guarda_variavel($_REQUEST['ordem_formulario']);
         $object_tamanho_formulario = guarda_variavel($_REQUEST['tamanho_formulario']);
         $object_obrigatorio = guarda_variavel($_REQUEST['obrigatorio']);
-            $object_objeto_referenciado = guarda_variavel($_REQUEST['objeto_referenciado']);
+        $object_objeto_referenciado = guarda_variavel($_REQUEST['objeto_referenciado']);
 
         if (empty($object_nome_do_atributo)) {
             $erro = 1;
             ?>
             <p>É necessário indicar um nome para o atributo.<p>
-            <?php
-            back();                    
-    
+            <?php                  
         } if (empty($object_tipo_de_valor)) {
             $erro = 1;
             ?>
             <p>É necessário indicar o tipo de valor.<p>
-            <?php
-            back();                    
+            <?php                   
         } if (empty($object_objeto)) {
             $erro = 1;
             ?>
             <p>É necessário indicar um objeto.<p>
-            <?php
-            back();   
+            <?php 
         } if (empty($object_tipo_formulario)) {
             $erro = 1;
             ?>
             <p>É necessário indicar um nome para o campo do formulário.<p>
             <?php
-            back();  
         } if (empty($object_ordem_formulario)) {
             $erro = 1;
             ?>
             <p>É necessário indicar uma ordem para o campo do formulário.<p>
             <?php
-            back(); 
         } if (empty($object_tamanho_formulario)) {
             $erro = 1;
             ?>
             <p>É necessário indicar um tamanho para o campo do formulário.<p>
-            <?php
-            back();     
+            <?php   
         } if (empty($object_obrigatorio)) {
             $erro = 1;
             ?>
             <p>É necessário indicar se é obrigatório ou não.<p>
             <?php
-            back();       
-        } if ($erro == 1) {
+        } 
+        if ($erro) {
+            back();
+        }
+        if ($erro == 0) {
             if($object_obrigatorio == "sim") {
                 $object_obrigatorio = 1;
             } else {
                 $object_obrigatorio = 0;
             }
-        
-            // código SQL em formato string para inserir novos atributos
+    
             $query_inserir = "INSERT INTO `attribute` (`id`, `name`, `value_type`, `obj_id`, `form_field_name`, `form_field_type`,
             `unit_type_id`, `form_field_order`, `form_field_size`, `mandatory`, `obj_fk_id`) 
-            VALUES (NULL, '$object_nome_do_atributo', '$object_tipo_de_valor', '$object_objeto', 'tv-7-diagonal', '$object_tipo_formulario', " 
+            VALUES (NULL, '$object_nome_do_atributo', '$object_tipo_de_valor', '$object_objeto', 'str', '$object_tipo_formulario', " 
             . $object_unidade . ", '$object_ordem_formulario', '$object_tamanho_formulario', '$object_obrigatorio', " . $object_objeto_referenciado . ")"; 
 
-            $result_insert = executa_query($query_inserir);
+            $resultado_inserir = executa_query($query_inserir);
  
-            if ($result_insert) {
-            mysqli_query($liga,'COMMIT');
-            ?>
-            <p>Inseriu os dados de novo tipo de unidade com sucesso!
-            Clique  em <a href="gestao-de-atributos">continuar</a> para avançar.
-            <!-- $string = preg_replace('/[^a-z0-9_ ]/i', '', $string);) -->
-            <br/>
-            <?php
+            if ($resultado_inserir) {
+                $query_attribute = "SELECT * FROM attribute WHERE obj_id=".$object_objeto;
+                $result_attribute = executa_query($query_attribute);
+                $attribute = mysqli_fetch_assoc($result_attribute);
+                $nome_attribute = $attribute['name'];
+                
+                $auxiliar = substr($nome_attribute, 0, 3);
+                $string_aux = preg_replace('/[^a-z0-9_ ]/i', '', $object_nome_do_atributo);
+                $string_aux = strtolower ( $string_aux );
+                $string = $auxiliar.'-N-'.$string_aux;
+                
+                $ultimo_id = mysqli_insert_id($liga);
+                echo $ultimo_id;
+                $update_dados = "UPDATE `attribute` 
+                SET `form_field_name` = '".$auxiliar."-".$ultimo_id."-".$string_aux ."'
+                WHERE attribute.id =" . $ultimo_id; // TA AQUI 
+                $resultado_query = executa_query($update_dados);
+            
+                if($resultado_query) {
+                     ?>
+                <p>Inseriu os dados de novo tipo de unidade com sucesso!
+                Clique  em <a href="gestao-de-atributos">continuar</a> para avançar.
+                <br/>
+                <?php
+                }
             }
         }
     }

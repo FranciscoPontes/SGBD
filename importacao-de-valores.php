@@ -1,11 +1,14 @@
 <?php
     require_once("custom/php/common.php");
+
+    // verifica se utilizador tem permissao
     if (is_user_logged_in() && current_user_can('values_import')) {
 
         $liga =liga_basedados();
-        echo"3";
+
         if ($_REQUEST["estado"] == ""){
             echo "<h3><b>Importação de valores - escolher objeto</b></h3>";
+
             $query_object = "SELECT id, name FROM object";
             $query_object_type = "SELECT id, name FROM obj_type";
 
@@ -21,6 +24,7 @@
                 $resultado_object_type = executa_query($query_object_type);                 
                 echo"<p>Objetos:</p>";
 
+                // para cada tipo de objeto escreve o nome dos objetos em forma de lista
                 while($array_object_type = mysqli_fetch_array($resultado_object_type)){
                     $query_object = "SELECT * FROM object WHERE object.obj_type_id=".$array_object_type["id"];
                     $resultado_object = executa_query($query_object);  
@@ -39,7 +43,8 @@
 
                 $query_forms = "SELECT * FROM custom_form";
                 $resultado_forms = executa_query($query_forms);  
-                
+
+                // escreve o nome dos formularios em forma de lista
                 echo"<ul>"; 
                     while($array_forms = mysqli_fetch_array($resultado_forms)){
                     
@@ -67,6 +72,9 @@
             $query_atributos=executa_query($sql_atributos);
 
             while ($array_atributos=mysqli_fetch_array($query_atributos)){
+
+                // se o value type for enum escrever o form field name o numero de vezes
+                // equivalente ao numero de valores permitidos
                 if ($array_atributos["value_type"]=='enum'){
                     $sql_valores_permitidos="SELECT * FROM attr_allowed_value WHERE attribute_id=".$array_atributos["id"];
                     $query_valores_permitidos=executa_query($sql_valores_permitidos);
@@ -75,6 +83,7 @@
                         echo"<td>".$array_atributos["form_field_name"]."</td>";
                     }
                 }
+                // caso contrario escreve apenas uma vez
                 else{
                     echo"<td>".$array_atributos["form_field_name"]."</td>";
                 }
@@ -87,6 +96,7 @@
             $query_atributos2=executa_query($sql_atributos);
 
             while ($array_atributos=mysqli_fetch_array($query_atributos2)){
+                // se o value type do atributo for enum escreve os valores permitidos
                 if ($array_atributos["value_type"]=='enum'){
                     $sql_valores_permitidos="SELECT * FROM attr_allowed_value WHERE attribute_id=".$array_atributos["id"];
                     $query_valores_permitidos=executa_query($sql_valores_permitidos);
@@ -94,6 +104,7 @@
                         echo"<td>".$array_valores_permitidos["value"]."</td>";
                     }
                 }
+                // caso contrario uma celula vazia
                 else{
                     echo"<td></td>";
                 }

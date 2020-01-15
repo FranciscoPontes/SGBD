@@ -1,11 +1,10 @@
 <?php
 require_once ("custom/php/common.php");
  
-// Verifica se o utilizador fez login no wp e se tem permissão para mexer nos atributos
 if (is_user_logged_in() && current_user_can('insert_values')) {        
     $liga = liga_basedados();
 
-    // Quando o estado da execução não está definido
+    // Quando o estado não está definido
     if ($_REQUEST["estado"] == "") {    
     
         $query_object = "SELECT id, name FROM object";
@@ -27,7 +26,7 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
             $resultado_object_type = executa_query($query_object_type); 
             ?>
             
-            <p>Objetos:</p>
+            <h2>Objetos:</h2>
             <?php
 
             while($array_object_type = mysqli_fetch_array($resultado_object_type)){
@@ -36,7 +35,7 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                 $resultado_object = executa_query($query_object);  
                 ?> 
                 <ul>
-                    <li><?php echo $array_object_type['name']; ?></li>
+                    <li><h3><?php echo $array_object_type['name']; ?></h3></li>
                     <ul><?php 
                      while($array_object = mysqli_fetch_array($resultado_object)){?>
                         <li>[<?php echo '<a href="insercao-de-valores?estado=introducao&obj=' . $array_object['id'] . '">
@@ -49,7 +48,7 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
                      
             }?>
             
-            <p>Formulários customizados:</p>
+            <h2>Formulários customizados:</h2>
             <?php
             $query_forms = "SELECT * FROM custom_form";
 
@@ -67,64 +66,59 @@ if (is_user_logged_in() && current_user_can('insert_values')) {
             <?php
         }
     } elseif ($_REQUEST["estado"] == "introducao") {
-        // session_start();
-        // $_SESSION['obj_id'] = guarda_variavel($_REQUEST['obj']);
 
-        $obj_id = guarda_variavel($_REQUEST['obj']);
+        $_SESSION["obj_id"] = guarda_variavel($_REQUEST['obj']);
 
         $query_object = "SELECT DISTINCT name, obj_type_id 
             FROM object 
-            WHERE " . $obj_id . "=object.id";
+            WHERE object.id = '{$_SESSION["obj_id"]}'";
         $resultado_query = executa_query($query_object);
         $array_object = mysqli_fetch_array($resultado_query);
 
-        $obj_name  = guarda_variavel($array_object['name']);
-        $obj_type_id  = guarda_variavel($array_object['obj_type_id']);
+        $_SESSION["obj_name"] = guarda_variavel($array_object['name']);
+        $_SESSION["obj_type_id"] = guarda_variavel($array_object['obj_type_id']);
         ?> 
         
         
-        <h3>Inserção de valores - <?php echo $obj_name;?></h3>
+        <h3>Inserção de valores - <?php echo $_SESSION["obj_name"];?></h3>
     
         <?php
          
-        $query_novo_obj = "SELECT * 
+        $query_attribute = "SELECT * 
             FROM attribute
-            WHERE state='active' AND " . $obj_id . "=obj_id";
-        $resultado_novo_obj = executa_query($query_novo_obj);
-
-        $array_novo_obj = mysqli_fetch_array($resultado_novo_obj);
+            WHERE state='active' AND attribute.obj_id = '{$_SESSION["obj_id"]}'";
+        $resultado_attribute = executa_query($query_attribute);
         
-        // $object_id_relacao = guarda_variavel($resultado_novo_obj['rel_id']);
-        // $object_nome_do_atributo = guarda_variavel($resultado_novo_obj['name']);
-        // $object_tipo_de_valor = guarda_variavel($resultado_novo_obj['value_type']);
-        // $object_nome_formulario = guarda_variavel($resultado_novo_obj['form_field_name']);
-        // $object_tipo_formulario = guarda_variavel($resultado_novo_obj['form_field_type']);
-        // $object_id_unidade = guarda_variavel($resultado_novo_obj['unit_type_id']);
-        // $object_ordem_formulario = guarda_variavel($resultado_novo_obj['form_field_order']);
-        // $object_tamanho_formulario = guarda_variavel($resultado_novo_obj['form_field_size']);
-        // $object_obrigatorio = guarda_variavel($resultado_novo_obj['mandatory']);
-        // $object_estado = guarda_variavel($resultado_novo_obj['state']);
-        // $object_objeto_referenciado = guarda_variavel($resultado_novo_obj['obj_fk_id']);
+        $lines_attribute = mysqli_num_rows($resultado_attribute);
 
-        // switch($valor_a_executar) {
-        //     case 0:
-        //     break;
-        // }
+        if (!$lines_attribute) {
+            echo "<p>Não existem atributos para este formulário.</p>";
+            back();
+            return;
+        }
+
+        while($lines_attribute) {
+           
+        }
+
+        ?>
+    <?php
+        back();
 
         ?> 
-       <?php echo '<a href="insercao-de-valores?estado=validar&obj=' . $obj_id . '">Validar</a>';
+       <?php echo '<a href="insercao-de-valores?estado=validar&obj=' . $_SESSION["obj_id"] . '">Validar</a>';
     } elseif ($_REQUEST["estado"] == "validar") {
         ?> 
-        <h3>Inserção de valores - <?php echo $obj_name;?> - Validar</h3>
+        <h3>Inserção de valores - <?php echo $_SESSION["obj_name"];?> - Validar</h3>
         <p>Estamos prestes a inserir os dados abaixo na base de dados. 
         Confirma que os dados estão correctos e pretende submeter os mesmos?</p>
-        <?php echo '<a href="insercao-de-valores?estado=inserir&obj=' . $obj_id . '">Submeter</a>';
+        <?php echo '<a href="insercao-de-valores?estado=inserir&obj=' . $_SESSION["obj_id"] . '">Submeter</a>';
     } elseif ($_REQUEST["estado"] == "inserir") {
         ?> 
-        <h3>Inserção de valores - <?php echo $obj_name;?> - Inserção</h3>
+        <h3>Inserção de valores - <?php echo $_SESSION["obj_name"];?> - Inserção</h3>
         <p>Inseriu o(s) valor(es) com sucesso.</p>
         <p>Clique em <a href="insercao-de-valores">Voltar</a> para voltar ao início da inserção de valores e poder escolher outro objeto 
-        ou em <?php echo '<a href="insercao-de-valores?estado=introducao&obj=' . $obj_id . '">Continuar a inserir valores neste objeto</a>';?> se quiser continuar a inserir valores</p> 
+        ou em <?php echo '<a href="insercao-de-valores?estado=introducao&obj=' . $_SESSION["obj_id"] . '">Continuar a inserir valores neste objeto</a>';?> se quiser continuar a inserir valores</p> 
         <?php
     }
 } else { ?>
