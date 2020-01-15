@@ -4,7 +4,6 @@ require_once("custom/php/common.php");
 // faz verificação, para ver se o utilizador está logado e se ter permissão para alterar objetos
 if (is_user_logged_in() && current_user_can('manage_allowed_values')) {        
 $liga =liga_basedados();
-
 // Quando o estado da execução não está definido
 if ($_REQUEST["estado"] == "") {    
     // código SQL em formato string para obter atributos cujo tipo de valor seja enum
@@ -16,18 +15,17 @@ if ($_REQUEST["estado"] == "") {
     if ($lines_atributo==0){
         echo 'Não há atributos especificados cujo tipo de valor seja enum. Especificar primeiro novo(s) atributo(s) e depois voltar a esta opção.';
     }
-    else{?>
-    <table>
-        <tr>
-            <th>objeto</th>
-            <th>id</th>
-            <th>atributo</th>
-            <th>id</th>
-            <th>valores permitidos</th>
-            <th>estado</th>
-            <th>ação</th>
-        </tr>
-        <?php
+    else{
+        echo"<table>
+            <tr>
+                <th>objeto</th>
+                <th>id</th>
+                <th>atributo</th>
+                <th>id</th>
+                <th>valores permitidos</th>
+                <th>estado</th>
+                <th>ação</th>
+            </tr>";
             
             // código SQL em formato string para obter o nome do objeto,nome do atributo e id, atributos do tipo enum
             $query_objeto="SELECT DISTINCT object.name,object.id FROM object,attribute
@@ -57,14 +55,12 @@ if ($_REQUEST["estado"] == "") {
                         $size_rowspan=$size_rowspan+$numero_valores_permitidos_tamanho;
                     }
                 }
-                ?>
-                <tr>    
-                    <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
-                            e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
-                    <td colspan="1" rowspan="<?php echo $size_rowspan;?>">
-                        <?php echo $array_objeto["name"]; ?>
-                    </td>
-                <?php
+                echo"<tr>";    
+                    //colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                            //e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)
+                    echo"<td colspan='1' rowspan='$size_rowspan'>
+                        ".$array_objeto["name"]."
+                    </td>";
                 $var=1;
 
                 $query_atributo="SELECT id,name FROM attribute
@@ -80,203 +76,84 @@ if ($_REQUEST["estado"] == "") {
                     $result_valores_permitidos=executa_query($query_valores_permitidos);
                     $numero_valores_permitidos=mysqli_num_rows($result_valores_permitidos);
                     // se houverem tuplos
-                    if ($numero_valores_permitidos>0 && $var==1){
-                            ?>
-                                <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
-                                e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
-                                
-                                <td colspan="1" rowspan="<?php echo $numero_valores_permitidos;?>">
-                                    <?php echo $array_atributo["id"]; ?>
-                                </td>
-                                <td colspan="1" rowspan="<?php echo $numero_valores_permitidos;?>">
-                                    <?php echo '<a href=gestao-de-valores-permitidos?estado=introducao&atributo='.$array_atributo["id"].'>['.$array_atributo["name"].']</a>'; ?>
-                                </td>
-                            <?php
+                    if ($numero_valores_permitidos>0){
+
+                            //colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                            //e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)
+                            if ($var==2){echo"<tr>";}
+                            echo"<td colspan='1' rowspan='$numero_valores_permitidos'>
+                                ".$array_atributo["id"]."
+                            </td>
+                            <td colspan='1' rowspan='$numero_valores_permitidos'>
+                                <a href=gestao-de-valores-permitidos?estado=introducao&atributo=".$array_atributo["id"].">[".$array_atributo["name"]."]</a>
+                            </td>";
                             $var=2;
                             $variavel=1;
 
                             // ciclo que percorre o array associativo
                             while ($array_valores_permitidos=mysqli_fetch_array($result_valores_permitidos)){
-                                if ($variavel==1){
-                                    ?>
-                                    <td> <?php
-                                    echo $array_valores_permitidos["id"];
-                                    ?>
-                                    </td>
-                                    <td> <?php
-                                        echo $array_valores_permitidos["value"];
-                                        ?>
-                                    </td>
-                                    <td> <?php
-                                        echo $array_valores_permitidos["state"];
-                                        ?>
-                                    </td>
-                                    <td> <?php if ($array_valores_permitidos["state"]=='active'){
-                                        echo '[editar][desativar]';
+                                if ($variavel==2){echo"<tr>";}
+                                    echo"<td>".$array_valores_permitidos["id"]."</td>
+                                    <td> ".$array_valores_permitidos["value"]." </td>
+                                    <td> ".$array_valores_permitidos["state"]." </td>
+                                    <td>"; if ($array_valores_permitidos["state"]=='active'){
+                                        echo"[editar][desativar]";
                                         }  
-                                        ?>
-                                    </td></tr><?php
-                                    $variavel=2; 
-                                }
-                                else{
-                                    ?>
-                                    <tr>
-                                        <td> <?php
-                                        echo $array_valores_permitidos["id"];
-                                        ?>
-                                        </td>
-                                        <td> <?php
-                                            echo $array_valores_permitidos["value"];
-                                            ?>
-                                        </td>
-                                        <td> <?php
-                                            echo $array_valores_permitidos["state"];
-                                            ?>
-                                        </td>
-                                        <td> <?php if ($array_valores_permitidos["state"]=='active'){
-                                            echo '[editar][desativar]';
-                                            }  
-                                            ?>
-                                        </td>
-                                    </tr><?php
-                                }
+                                    echo"</td> </tr>"; 
+                                $variavel=2;
                             }
                             $variavel=1;
                     }
-                    elseif ($numero_valores_permitidos>0 && $var==2){
-                        ?>
-                        <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
-                        e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
-                        <tr>
-                            <td colspan="1" rowspan="<?php echo $numero_valores_permitidos;?>">
-                                <?php echo $array_atributo["id"]; ?>
-                            </td>
-                            <td colspan="1" rowspan="<?php echo $numero_valores_permitidos;?>">
-                                <?php echo '<a href=gestao-de-valores-permitidos?estado=introducao&atributo='.$array_atributo["id"].'>['.$array_atributo["name"].']</a>'; ?>
-                            </td>
-                        <?php
-                         $variavel=1;
-
-                         // ciclo que percorre o array associativo
-                         while ($array_valores_permitidos=mysqli_fetch_array($result_valores_permitidos)){
-                             if ($variavel==1){
-                                 ?>
-                                 <td> <?php
-                                 echo $array_valores_permitidos["id"];
-                                 ?>
-                                 </td>
-                                 <td> <?php
-                                     echo $array_valores_permitidos["value"];
-                                     ?>
-                                 </td>
-                                 <td> <?php
-                                     echo $array_valores_permitidos["state"];
-                                     ?>
-                                 </td>
-                                 <td> <?php if ($array_valores_permitidos["state"]=='active'){
-                                     echo '[editar][desativar]';
-                                     }  
-                                     ?>
-                                 </td></tr><?php
-                                 $variavel=2; 
-                             }
-                             else{
-                                 ?>
-                                 <tr>
-                                     <td> <?php
-                                     echo $array_valores_permitidos["id"];
-                                     ?>
-                                     </td>
-                                     <td> <?php
-                                         echo $array_valores_permitidos["value"];
-                                         ?>
-                                     </td>
-                                     <td> <?php
-                                         echo $array_valores_permitidos["state"];
-                                         ?>
-                                     </td>
-                                     <td> <?php if ($array_valores_permitidos["state"]=='active'){
-                                         echo '[editar][desativar]';
-                                         }  
-                                         ?>
-                                     </td>
-                                 </tr><?php
-                             }
-                         }
-                         $variavel=1;
-                    }
 
                     // n tem valores permitidos                      
-                    
-                    elseif ($numero_valores_permitidos==0 && $var==1){
-                            ?>
-                            <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
-                            e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
-                                <td colspan="1" rowspan="1">
-                                    <?php echo $array_atributo["id"]; ?>
+                    elseif ($numero_valores_permitidos==0){
+                            //colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
+                            //e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)
+                            if ($var==2){echo"<tr>";}
+                            echo"<td colspan='1' rowspan='1'>
+                                    ".$array_atributo["id"]."
                                 </td>
-                                <td colspan="1" rowspan="1">
-                                    <?php echo '<a href=gestao-de-valores-permitidos?estado=introducao&atributo='.$array_atributo["id"].'>['.$array_atributo["name"].']</a>'; ?>
+                                <td colspan='1' rowspan='1'>
+                                    <a href=gestao-de-valores-permitidos?estado=introducao&atributo=".$array_atributo["id"].">[".$array_atributo["name"]."]</a>
                                 </td>
-                                <td colspan="4"> <?php
-                                    echo "Não há valores permitidos definidos";
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php 
+                                <td colspan='4'> 
+                                    Não há valores permitidos definidos
+                                </td> </tr>";
                             $var=2;
-                    }
-                    elseif ($numero_valores_permitidos==0 && $var==2){
-                        ?>
-                        <tr>
-                        <!--colspan define o numero de colunas que irá ocupar(tamanho na horizontal) 
-                        e rowspan define o numero de linhas que ira ocupar(tamanho na vertical)-->
-                        <td colspan="1" rowspan="1">
-                            <?php echo $array_atributo["id"]; ?>
-                        </td>
-                        <td colspan="1" rowspan="1">
-                            <?php echo '<a href=gestao-de-valores-permitidos?estado=introducao&atributo='.$array_atributo["id"].'>['.$array_atributo["name"].']</a>'; ?>
-                        </td>
-                        <td colspan="4"> <?php
-                            echo "Não há valores permitidos definidos";
-                            ?>
-                        </td>
-                        </tr><?php
                     }                     
                 }
             $var=1;                   
             }
-        ?>
-    </table>          
-                  
-    <?php
+    echo"</table>";                           
         }
     }
     elseif ($_REQUEST["estado"] == "introducao"){
 
         // guarda na variável de sessão 
         $_SESSION["attribute_id"] = guarda_variavel($_REQUEST["atributo"]);
-        ?>
-        <h3><b>Gestão de valores permitidos - introdução</b></h3>
+        echo"<h3><b>Gestão de valores permitidos - introdução</b></h3>";
     
-        <!--Formulario-->
-        <form name="gestao-de-valores-permitidos">
+        //Formulario
+        echo"<form name='gestao-de-valores-permitidos'>
             <p><label><b>Valor:</b></label>
-                <input type="text" name="valor" required>
+                <input type='text' name='valor'>
             </p>
             <p>
-                <input type= "hidden" name= "estado" value= "inserir">
-                <input class= "button" type= "submit" value= "submit">
+                <input type= 'hidden' name= 'estado' value= 'inserir'>
+                <input type= 'submit' value= 'Inserir valor permitido'>
             </p>
-        </form>
-        <?php
+        </form>";
     }
     elseif ($_REQUEST["estado"] == "inserir"){
         $attribute_value = guarda_variavel($_REQUEST["valor"]);
         $attribute_id= $_SESSION["attribute_id"];
-        ?>
-        <h3><b>Gestão de valores permitidos - inserção</b></h3>
-        <?php
+
+        if (empty($attribute_value)){
+            echo"<p>É necessário inserir um valor do tipo texto!</p>";
+            back();
+            return;
+        }
+        echo"<h3><b>Gestão de valores permitidos - inserção</b></h3>";
             // código SQL em formato string para inserir novos valores permitidos
             $query_insere = "INSERT INTO `attr_allowed_value` (`id`, `attribute_id`, `value`, `state`) VALUES (NULL,'$attribute_id','$attribute_value','active')"; 
 
@@ -284,18 +161,13 @@ if ($_REQUEST["estado"] == "") {
  
             if ($result_insere) {
                 mysqli_query($liga,'COMMIT');
-                ?>
-                <p>Inserção de dados feita com sucesso!
-                Clique  em <a href="gestao-de-valores-permitidos">continuar</a> para avançar.
-                <?php
+                echo"<p>Inserção de dados feita com sucesso!
+                Clique  em <a href='gestao-de-valores-permitidos'>continuar</a> para avançar.";
             }       
     }
 }
 
-
 else{
-    ?>
-    Não tem autorização para aceder a esta página
-    <?php
+    echo "Não tem autorização para aceder a esta página";
 }
 ?>
