@@ -1,11 +1,10 @@
 <?php
 
 require_once("custom/php/common.php");
-echo"3";
 // verifica se o utilizador fez login no wp e se tem permissão para mexer nos objetos
 if (is_user_logged_in() && current_user_can('dynamic_search')) {        
  
-$liga =liga_basedados();
+    $liga =liga_basedados();
 
 // quando o estado da execução não está definido
     if ($_REQUEST["estado"] == ""){
